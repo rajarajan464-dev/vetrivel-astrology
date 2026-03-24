@@ -5,6 +5,12 @@ from datetime import datetime, timedelta
 import calendar
 
 app = Flask(__name__)
+from flask import render_template # இதை மேலே மற்ற import-களுடன் சேர்த்துக்கொள்ளவும்
+
+@app.route('/')
+def home():
+    # இதுதான் உங்கள் index.html-ஐத் தேடி எடுத்துத் திரையில் காட்டும்
+    return render_template('index.html')
 CORS(app)
 # வார நாட்களுக்கான ராகு, எம, குளிகை நேரங்கள்
 TIMINGS = {
