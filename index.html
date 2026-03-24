@@ -1,0 +1,1480 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#FF9933">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon" href="vetrivel-icon.png">
+
+    <title>வெற்றிவேல் ஜோதிட ஆப் - Pro</title>
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('sw.js');
+        });
+      }
+    </script>
+    
+    <style>
+        /* உங்கள் பழைய CSS (Body, Container, Table போன்றவை) இங்கிருந்து தொடரட்டும்... */
+        body { font-family: Arial, sans-serif; margin: 0; padding: 10px; background-color: #f4f7f6; overflow-x: hidden;}
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 10px; background-color: #f4f7f6; overflow-x: hidden;}
+        .container { max-width: 1200px; margin: auto; background: white; padding: 15px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1); border-radius: 8px; position:relative;}
+        
+        .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        table { width: 100%; border-collapse: collapse; text-align: center; font-size: 13px;}
+        th, td { border: 1px solid #999; padding: 5px; }
+        th { background-color: #e6f7ff; color: #005580; font-weight: bold; }
+        h4 { color: #cc0066; text-align: center; margin-bottom: 5px; margin-top: 15px; border-bottom: 2px solid #eee; padding-bottom: 5px;}
+        
+        .top-toolbar { display: flex; justify-content: space-between; align-items: center; background: #e6f2ff; padding: 10px; border-radius: 5px; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;}
+        .top-toolbar button { padding: 8px 15px; font-size: 14px; cursor: pointer; border-radius: 4px; font-weight: bold;}
+        
+        .input-group { text-align: center; margin-bottom: 15px; border-bottom: 2px solid #ddd; padding-bottom: 15px; background: #fff9e6; padding-top: 10px; border-radius: 5px;}
+        .input-row { margin-bottom: 10px; display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap;}
+        input, select { padding: 8px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;}
+        
+        .btn-location { background: #28a745; color: white; border: none; cursor: pointer; font-weight: bold; padding: 8px 15px; border-radius: 4px;}
+        .btn-primary { background: #005580; color: white; border: none; cursor: pointer; padding: 10px 30px; font-weight: bold; font-size: 16px; border-radius: 5px; width: 100%; max-width: 300px; margin-top: 10px;}
+        .btn-now { background: #d84315; color: white; border: none; cursor: pointer; font-weight: bold; padding: 8px 15px; border-radius: 4px; font-size: 13px;}
+        .btn-random { background: #005580; color: white; border: none; cursor: pointer; font-weight: bold; padding: 8px 12px; border-radius: 4px; font-size: 13px; margin-left: 5px; display: none;}
+        .btn-random:hover { background: #004060; }
+        
+        .main-display-area { display: flex; gap: 20px; margin-top: 15px; flex-wrap: wrap; justify-content: center; align-items: stretch;}
+        .left-rasi-area { flex: 0 0 auto; display: flex; justify-content: center; align-items: center; padding: 20px 0;}
+        .right-tabs-area { flex: 1; min-width: 350px; max-width: 600px; background: white; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 2px 8px rgba(0,0,0,0.1);}
+        
+        .tab-buttons { display: flex; background: #005580; border-bottom: 2px solid #cc0066;}
+        .tab-btn { flex: 1; background: #005580; color: white; border: none; padding: 10px 5px; font-size: 13px; font-weight: bold; cursor: pointer; transition: 0.3s; border-radius: 0; outline: none;}
+        .tab-btn:hover { background: #004060; }
+        .tab-btn.active { background: white; color: #cc0066; }
+        .tab-content-area { padding: 15px; height: 420px; overflow-y: auto; background: #fdfdfd;}
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* பெரிய கட்டங்கள் (Larger Charts) */
+        .chart-container { position: relative; width: 400px; height: 400px; background: #000; border: 2px solid #000; margin: 0 auto; flex-shrink: 0;}
+        .rasi-box { position: absolute; width: 100px; height: 100px; background: #ffffcc; border: 1px solid #000; padding: 4px; box-sizing: border-box; font-size: 12px; overflow-y: auto; line-height: 1.3; }
+        .center-box { position: absolute; top: 100px; left: 100px; width: 200px; height: 200px; background: white; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #cc0066; font-size: 16px; font-weight: bold; z-index: 1; text-align:center;}
+        .rasi-box::-webkit-scrollbar { width: 3px; }
+        .rasi-box::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+
+        .b-item { color: red; margin-bottom: 3px; border-bottom: 1px dotted #ccc; padding-bottom: 2px; font-size: 13px; font-weight: bold;}
+        .p-item { color: #005580; margin-bottom: 3px; border-bottom: 1px dotted #ccc; padding-bottom: 2px; font-size: 14px; font-weight: bold;}
+        .detail-text { font-size: 10px; color: #444; font-weight: normal; display: block; line-height: 1.2;}
+
+        .box-11 { top: 0; left: 0; } .box-0 { top: 0; left: 100px; } .box-1 { top: 0; left: 200px; } .box-2 { top: 0; left: 300px; }
+        .box-10 { top: 100px; left: 0; } .box-3 { top: 100px; left: 300px; }
+        .box-9 { top: 200px; left: 0; } .box-4 { top: 200px; left: 300px; }
+        .box-8 { top: 300px; left: 0; } .box-7 { top: 300px; left: 100px; } .box-6 { top: 300px; left: 200px; } .box-5 { top: 300px; left: 300px; }
+
+        .pop-rasi-box { background: #f0fff0 !important; }
+        .pop-item { color: #008000; margin-bottom: 3px; border-bottom: 1px dotted #ccc; padding-bottom: 2px; font-size: 13px; font-weight:bold;}
+
+        .dasa-section-wrapper { display: flex; flex-direction: row; gap: 20px; margin-top: 25px; align-items: flex-start;}
+        .dasa-grid-container { flex: 2; width: 100%; display: flex; gap: 5px; overflow-x: auto; padding-bottom: 10px;}
+        .dasa-col { flex: 1; min-width: 140px; border: 1px solid #777; background-color: #a5d6a7; border-radius: 2px; }
+        .dasa-header { display: flex; justify-content: space-between; background-color: #e0e0e0; padding: 5px; font-weight: bold; color: #333; border-bottom: 1px solid #777; font-size: 12px;}
+        .dasa-list { display: flex; flex-direction: column; }
+        .dasa-item { display: flex; justify-content: space-between; padding: 4px 5px; font-size: 11px; border-bottom: 1px solid #90caf9; cursor: pointer; transition: background 0.2s;}
+        .dasa-item.active-dasa, .dasa-item.selected-dasa { color: #d32f2f; font-weight: bold; background-color: #f1f8e9; }
+
+        .transit-control-panel { flex: 1; min-width: 280px; background: #fff3e0; border: 2px solid #ffb74d; border-radius: 8px; padding: 15px; text-align: center; box-sizing: border-box;}
+        .transit-control-panel input[type="datetime-local"] { width: 100%; max-width: 250px;}
+        
+        .sig-table th { background-color: #ffb300; color: black; border: 2px solid #000; position: sticky; top: 0; z-index: 2;}
+        .sig-table td { border: 2px solid #000;}
+        .details-table th { background-color: #e6f9ff; color: #005580; position: sticky; top: 0; z-index: 2;}
+        
+        .eff-link-box { padding: 4px; border-radius: 4px; font-size: 14px; letter-spacing: 1px; }
+
+        .radio-toolbar { margin: 10px 0; display: inline-flex; background: #e6f7ff; border: 1px solid #005580; border-radius: 5px; overflow: hidden; }
+        .radio-toolbar input[type="radio"] { display: none; }
+        .radio-toolbar label { display: inline-block; padding: 6px 15px; cursor: pointer; font-size: 13px; font-weight: bold; color: #005580; transition: background 0.3s; }
+        .radio-toolbar input[type="radio"]:checked + label { background-color: #005580; color: white; }
+
+        /* Match Making Styles */
+        .match-split-screen { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px; background: #ffe6f2; padding: 15px; border-radius: 8px; border: 2px solid #ffb3d9;}
+        .match-profile-card { flex: 1; min-width: 300px; background: #fff9fc; border: 1px solid #ffb3d9; padding: 15px; border-radius: 8px;}
+        .match-profile-card.boy { background: #f0f8ff; border: 1px solid #99ccff;}
+        .match-header { font-size: 18px; font-weight: bold; text-align: center; margin-bottom: 15px; padding: 5px; color: white;}
+        .girl-header { background: #cc0066; }
+        .boy-header { background: #005580; }
+        
+        .match-result-table th { background-color: #ffccff; color: #cc0066; font-size: 15px;}
+        .match-result-table .match-yes { color: #008000; font-weight: bold; background: #e6ffe6;}
+        .match-result-table .match-no { color: #cc0000; background: #ffe6e6;}
+        
+        .chart-area { display: flex; gap: 10px; justify-content: center; margin-top: 15px; flex-wrap: wrap;}
+        .sig-container { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px;}
+        .sig-panel { flex: 1; min-width: 300px;}
+
+        /* Modals */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-box { background: white; width: 90%; max-width: 500px; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.4); display: flex; flex-direction: column; max-height: 80vh; overflow: hidden; animation: animatetop 0.3s; }
+        @keyframes animatetop { from {top: -30px; opacity: 0} to {top: 0; opacity: 1} }
+        .modal-header { padding: 15px; background: #005580; color: white; display: flex; justify-content: space-between; align-items: center; }
+        .modal-close { background: transparent; color: white; border: none; font-size: 24px; cursor: pointer; }
+        .modal-close:hover { color: #ffcccc; }
+        .modal-content { flex: 1; overflow-y: auto; padding: 15px; }
+        
+        .folder-search-bar { padding: 15px; background: #f0f4f8; border-bottom: 1px solid #ddd; }
+        .folder-search-bar input { width: 100%; padding: 10px; font-size: 15px; border-radius: 20px; border: 1px solid #ccc; outline: none; }
+        .folder-list { flex: 1; overflow-y: auto; padding: 10px; }
+        .folder-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #eee; transition: background 0.2s; }
+        .folder-item:hover { background: #e6f7ff; }
+        .folder-info { flex: 1; cursor: pointer; }
+        .folder-info h4 { margin: 0 0 5px 0; color: #cc0066; font-size: 15px;}
+        .folder-info p { margin: 0; font-size: 12px; color: #555; }
+        .folder-delete { background: #cc0000; color: white; border: none; border-radius: 4px; padding: 6px 12px; cursor: pointer; font-size: 12px;}
+        .folder-delete:hover { background: #990000; }
+
+        /* Floating Micro Panel (நுட்ப நிலை) */
+        .floating-btn { position: fixed; left: 0; top: 50%; transform: translateY(-50%); background: #005580; color: white; padding: 15px 5px; font-weight: bold; border-radius: 0 8px 8px 0; cursor: pointer; writing-mode: vertical-rl; text-orientation: mixed; z-index: 1000; box-shadow: 2px 0px 5px rgba(0,0,0,0.3); border: 2px solid #fff;}
+        .floating-btn:hover { background: #cc0066; }
+        .micro-table { width: 100%; text-align:left; border-collapse: collapse; font-size:13px; margin-top:10px;}
+        .micro-table th { background:#f0f0f0; padding:6px; border:1px solid #ccc; color:#005580;}
+        .micro-table td { padding:6px; border:1px solid #ccc; font-weight:bold;}
+        .micro-divider td { background:#e6f2ff; color:#005580; text-align:center; font-weight:bold; padding:8px; font-size:14px; border-bottom: 2px solid #005580;}
+
+        /* Panchangam Calendar Grid */
+        .cal-controls { display:flex; justify-content:space-between; align-items:center; background:#f0f4f8; padding:10px; border-radius:8px; margin-bottom:10px;}
+        .cal-controls button { background:#005580; color:white; border:none; padding:8px 15px; border-radius:4px; font-weight:bold; cursor:pointer;}
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
+        .cal-header { background: #005580; color: white; padding: 8px 2px; font-weight: bold; text-align: center; font-size:12px; border-radius:4px;}
+        .cal-cell { border: 1px solid #ccc; padding: 5px; min-height: 80px; text-align: center; background:#fff; border-radius:4px; display:flex; flex-direction:column; justify-content:flex-start; align-items:center;}
+        .cal-cell.empty { background:transparent; border:none; }
+        .cal-date { font-size: 18px; font-weight: bold; color: #cc0066; margin-bottom:2px;}
+        .cal-info { font-size: 10px; color: #333; line-height:1.2; margin-bottom:3px;}
+        .cal-event { font-size: 9px; background: #ffcc00; color:black; padding: 2px 4px; border-radius: 3px; margin-top: 2px; font-weight:bold;}
+        .evt-muhurtham { background: #e6ffe6; color: #008000; border:1px solid #008000; }
+        .evt-eclipse { background: #000; color: #fff; }
+        .evt-vastu { background: #e6f2ff; color: #005580; border:1px solid #005580; }
+        .evt-vrat { background: #fff0e6; color: #d84315; }
+
+        /* --- PRINT CSS --- */
+        @media print {
+            body { background: white !important; margin: 0; padding: 0; font-size: 12px; }
+            .top-toolbar, .input-group, .floating-btn, #toggle-view-btn, .modal-overlay, button { display: none !important; }
+            .container { box-shadow: none !important; width: 100% !important; max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
+            
+            .chart-area { display: flex !important; flex-wrap: nowrap !important; align-items: flex-start; justify-content: space-around; page-break-inside: avoid; margin-top:10px !important;}
+            .chart-container { width: 340px !important; height: 340px !important; zoom: 0.9;}
+            .rasi-box { width: 85px !important; height: 85px !important; font-size: 10px !important; line-height: 1.1;}
+            .center-box { top: 85px !important; left: 85px !important; width: 170px !important; height: 170px !important; font-size: 14px !important;}
+            
+            .box-0 { left: 85px !important; } .box-1 { left: 170px !important; } .box-2 { left: 255px !important; }
+            .box-3 { left: 255px !important; top: 85px !important; } .box-4 { left: 255px !important; top: 170px !important; }
+            .box-5 { left: 255px !important; top: 255px !important; } .box-6 { left: 170px !important; top: 255px !important; }
+            .box-7 { left: 85px !important; top: 255px !important; } .box-8 { top: 255px !important; }
+            .box-9 { top: 170px !important; } .box-10 { top: 85px !important; }
+            
+            .b-item { font-size: 11px !important; } .p-item { font-size: 11px !important; } .detail-text { font-size: 8px !important; }
+            
+            h2, h3, h4 { margin: 5px 0 !important; padding: 2px !important; }
+            .match-split-screen { display: none !important; } 
+            #match-results { display: block !important; }
+            
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
+        }
+
+        @media (max-width: 800px) {
+            .dasa-section-wrapper { flex-direction: column; }
+            .transit-control-panel { width: 100%; }
+            .right-tabs-area { max-width: 100%; }
+            .top-toolbar { flex-direction: column; align-items: stretch; }
+            .cal-header { font-size:10px; padding: 4px 1px;}
+        }
+        @media (max-width: 600px) {
+            .input-row input[type="text"], .input-row input[type="date"], .input-row input[type="time"], .input-row input[type="number"] { width: 100% !important; margin-bottom: 5px; }
+            .input-row div { width: 100%; }
+            .tab-btn { font-size: 11px; padding: 8px 2px;}
+            .btn-location { width: 100%; padding: 10px;}
+            .chart-container { width: 100%; max-width: 340px; height: 340px; }
+            .rasi-box { width: 85px; height: 85px; font-size: 10px;}
+            .center-box { top: 85px; left: 85px; width: 170px; height: 170px; font-size: 14px;}
+            .box-1 { left: 170px; } .box-2 { left: 255px; } .box-3 { left: 255px; top: 85px;} .box-4 { left: 255px; top: 170px;} .box-5 { left: 255px; top: 255px; } .box-6 { left: 170px; top: 255px;} .box-7 { left: 85px; top: 255px;} .box-8 { top: 255px;} .box-9 { top: 170px; } .box-10 { top: 85px; }
+            .cal-date { font-size:14px; }
+            .cal-info { font-size:8px; }
+        }
+    </style>
+</head><link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#FF9933">
+<body>
+    
+    <div class="floating-btn" onclick="openMicroModal()">📌 நுட்ப நிலைகள்</div>
+
+    <div class="container">
+        
+        <div class="top-toolbar">
+            <div style="display:flex; gap:10px; align-items:center;">
+                <button onclick="openFolderModal()" style="background: white; border: 2px solid #005580; color: #005580;">📁 சேமித்த ஜாதகங்கள்</button>
+                <button onclick="saveProfile()" style="background:#28a745; color:white; border:none;">💾 சேமி</button>
+                <button onclick="showPanchangam()" style="background:#ff9800; color:white; border:none;">📜 பஞ்சாங்கம்</button>
+            </div>
+            <div>
+                <button id="toggle-view-btn" onclick="toggleMatchView()" style="background:#cc0066; color:white; border:none;">💖 திருமண பொருத்தம்</button>
+                <button onclick="window.print()" style="background: #000; color: white; border: none; margin-left:5px;">🖨️ Print</button>
+            </div>
+        </div>
+
+        <div id="single-app-view">
+            <div class="input-group">
+                <h2 style="color: #cc0066; margin-top: 0; font-size:20px;">பாஸ்கரா ஜோதிட ஆப்</h2>
+                
+                <div class="input-row">
+                    <select id="p_gender" style="font-weight:bold; color:#005580;">
+                        <option value="M">ஆண்</option>
+                        <option value="F">பெண்</option>
+                    </select>
+                    <div><input type="text" id="p_name" placeholder="பெயர் (உதா: ராஜராஜன்)"></div>
+                    <div style="display: flex; gap: 5px;">
+                        <input type="text" id="p_place" placeholder="ஊர் (English-ல்)">
+                        <button type="button" class="btn-location" onclick="fetchCoordinatesFromNet('p_place', 'lat', 'lon')">📍 தேடு</button>
+                    </div>
+                </div>
+                
+                <div class="input-row" style="background: #fff0b3; padding: 5px; border-radius: 4px;">
+                    <b style="font-size:14px;">அயனாம்சா:</b> 
+                    <select id="ayanamsa" style="border:none; background:transparent; font-weight:bold; color:#cc0066; font-size:14px; width:auto !important;">
+                        <option value="kp">KP Original</option>
+                        <option value="lahiri">Lahiri (Chitrapaksha)</option>
+                    </select>
+                    
+                    <label style="margin-left:15px; font-weight:bold; color:#d84315;">
+                        <input type="checkbox" id="is_kp_horary" onchange="toggleHorary()"> KP பிரசன்னம்
+                    </label>
+                    <input type="number" id="kp_number" min="1" max="249" placeholder="எண் (1-249)" style="display:none; width:100px; margin-left:5px;">
+                    <button type="button" id="btn_random_kp" class="btn-random" onclick="generateRandomKP()">🎲 Random</button>
+                </div>
+
+                <div class="input-row">
+                    <div style="display:flex; gap:5px;"><input type="date" id="dob" value="1981-12-30" style="flex:1;"><input type="time" id="tob" value="03:29:30" step="1" style="flex:1;"></div>
+                    <button type="button" class="btn-now" onclick="setNowTime('dob', 'tob')">⏱️ Now</button>
+                    <div style="display:flex; gap:5px; margin-left:10px;"><input type="number" id="lat" placeholder="Lat" value="11.66612" step="0.00001" style="flex:1; width:80px;"><input type="number" id="lon" placeholder="Lon" value="78.011173" step="0.000001" style="flex:1; width:80px;"></div>
+                </div>
+
+                <div style="display: flex; gap: 10px; justify-content: center; margin-top: 10px;">
+                    <button class="btn-primary" onclick="calculateAstrology()">கணக்கிடு</button>
+                </div>
+            </div>
+
+            <div id="results">
+                <div class="main-display-area" id="main-display" style="display:none;">
+                    <div class="left-rasi-area">
+                        <div class="chart-container" id="rasi-chart">
+                            <div class="rasi-box box-11" id="r-box-11"></div><div class="rasi-box box-0" id="r-box-0"></div><div class="rasi-box box-1" id="r-box-1"></div><div class="rasi-box box-2" id="r-box-2"></div>
+                            <div class="rasi-box box-10" id="r-box-10"></div>
+                            <div class="center-box" id="basic-info-center">ராசிக் கட்டம்</div>
+                            <div class="rasi-box box-3" id="r-box-3"></div>
+                            <div class="rasi-box box-9" id="r-box-9"></div><div class="rasi-box box-4" id="r-box-4"></div>
+                            <div class="rasi-box box-8" id="r-box-8"></div><div class="rasi-box box-7" id="r-box-7"></div><div class="rasi-box box-6" id="r-box-6"></div><div class="rasi-box box-5" id="r-box-5"></div>
+                        </div>
+                    </div>
+
+                    <div class="right-tabs-area">
+                        <div class="tab-buttons">
+                            <button class="tab-btn active" onclick="switchTab('tab-navamsa', this)">1. நவாம்சம்</button>
+                            <button class="tab-btn" onclick="switchTab('tab-transit', this)">2. தசா கட்டம்</button>
+                            <button class="tab-btn" onclick="switchTab('tab-sig', this)">3. குறிகாட்டிகள்</button>
+                            <button class="tab-btn" onclick="switchTab('tab-details', this)">4. பாவ/கிரக நிலை</button>
+                        </div>
+                        
+                        <div class="tab-content-area">
+                            <div id="tab-navamsa" class="tab-content active">
+                                <div class="chart-container" id="navamsa-chart">
+                                    <div class="rasi-box box-11" id="n-box-11"></div><div class="rasi-box box-0" id="n-box-0"></div><div class="rasi-box box-1" id="n-box-1"></div><div class="rasi-box box-2" id="n-box-2"></div>
+                                    <div class="rasi-box box-10" id="n-box-10"></div>
+                                    <div class="center-box">நவாம்சக் கட்டம்</div>
+                                    <div class="rasi-box box-3" id="n-box-3"></div>
+                                    <div class="rasi-box box-9" id="n-box-9"></div><div class="rasi-box box-4" id="n-box-4"></div>
+                                    <div class="rasi-box box-8" id="n-box-8"></div><div class="rasi-box box-7" id="n-box-7"></div><div class="rasi-box box-6" id="n-box-6"></div><div class="rasi-box box-5" id="n-box-5"></div>
+                                </div>
+                            </div>
+
+                            <div id="tab-transit" class="tab-content">
+                                <div class="chart-container" id="pop-chart" style="border: 2px solid #008000;">
+                                    <div class="rasi-box pop-rasi-box box-11" id="pop-box-11"></div><div class="rasi-box pop-rasi-box box-0" id="pop-box-0"></div><div class="rasi-box pop-rasi-box box-1" id="pop-box-1"></div><div class="rasi-box pop-rasi-box box-2" id="pop-box-2"></div>
+                                    <div class="rasi-box pop-rasi-box box-10" id="pop-box-10"></div>
+                                    <div class="center-box" style="background:#f0fff0; color:#008000; border: 1px solid #008000;" id="pop-center-text">கோட்சாரம்</div>
+                                    <div class="rasi-box pop-rasi-box box-3" id="pop-box-3"></div>
+                                    <div class="rasi-box pop-rasi-box box-9" id="pop-box-9"></div><div class="rasi-box pop-rasi-box box-4" id="pop-box-4"></div>
+                                    <div class="rasi-box pop-rasi-box box-8" id="pop-box-8"></div><div class="rasi-box pop-rasi-box box-7" id="pop-box-7"></div><div class="rasi-box pop-rasi-box box-6" id="pop-box-6"></div><div class="rasi-box pop-rasi-box box-5" id="pop-box-5"></div>
+                                </div>
+                            </div>
+
+                            <div id="tab-sig" class="tab-content"></div>
+                            <div id="tab-details" class="tab-content"></div>
+                        </div>
+                    </div>
+                </div>
+                <div id="control-panel-div"></div>
+            </div>
+        </div>
+
+        <div id="match-app-view" style="display:none;">
+            <div class="input-group" style="background:#fff0f5; border: 2px solid #ffb3d9;">
+                <h2 style="color: #cc0066; margin-top: 0; font-size:22px;">💖 திருமணப் பொருத்தம் & ஜாதக ஒப்பீடு 💖</h2>
+                
+                <div class="match-split-screen">
+                    <div class="match-profile-card">
+                        <div class="match-header girl-header">பெண் ஜாதகம்</div>
+                        <div class="input-row">
+                            <select id="load_girl" onchange="loadMatchProfile(this.value, 'g')">
+                                <option value="">-- சேமித்த ஜாதகத்தை எடுக்க --</option>
+                            </select>
+                        </div>
+                        <div class="input-row"><input type="text" id="g_name" placeholder="பெண் பெயர்"></div>
+                        <div class="input-row" style="display:flex;">
+                            <input type="text" id="g_place" placeholder="ஊர்" style="flex:1;">
+                            <button type="button" class="btn-location" style="padding:5px;" onclick="fetchCoordinatesFromNet('g_place', 'g_lat', 'g_lon')">📍</button>
+                        </div>
+                        <div class="input-row">
+                            <input type="date" id="g_dob" value="1995-05-10">
+                            <input type="time" id="g_tob" value="10:30:00" step="1">
+                        </div>
+                        <div class="input-row">
+                            <input type="number" id="g_lat" placeholder="Lat" value="11.666" step="0.00001">
+                            <input type="number" id="g_lon" placeholder="Lon" value="78.011" step="0.00001">
+                        </div>
+                    </div>
+
+                    <div class="match-profile-card boy">
+                        <div class="match-header boy-header">ஆண் ஜாதகம்</div>
+                        <div class="input-row">
+                            <select id="load_boy" onchange="loadMatchProfile(this.value, 'b')">
+                                <option value="">-- சேமித்த ஜாதகத்தை எடுக்க --</option>
+                            </select>
+                        </div>
+                        <div class="input-row"><input type="text" id="b_name" placeholder="ஆண் பெயர்"></div>
+                        <div class="input-row" style="display:flex;">
+                            <input type="text" id="b_place" placeholder="ஊர்" style="flex:1;">
+                            <button type="button" class="btn-location" style="padding:5px;" onclick="fetchCoordinatesFromNet('b_place', 'b_lat', 'b_lon')">📍</button>
+                        </div>
+                        <div class="input-row">
+                            <input type="date" id="b_dob" value="1992-08-15">
+                            <input type="time" id="b_tob" value="14:45:00" step="1">
+                        </div>
+                        <div class="input-row">
+                            <input type="number" id="b_lat" placeholder="Lat" value="11.666" step="0.00001">
+                            <input type="number" id="b_lon" placeholder="Lon" value="78.011" step="0.00001">
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-bottom: 10px;">
+                    <label style="font-weight:bold; color:#cc0066; margin-right:15px;">
+                        அயனாம்சா: 
+                        <select id="match_ayanamsa" style="padding:5px; font-weight:bold;">
+                            <option value="kp">KP Original</option>
+                            <option value="lahiri">Lahiri</option>
+                        </select>
+                    </label>
+                    <button class="btn-primary" style="background:#cc0066;" onclick="calculateMatch()">ஜாதகங்களை ஒப்பிடுக</button>
+                </div>
+            </div>
+
+            <div id="match-loading" style="display:none; text-align:center; color:blue; font-weight:bold; margin-bottom: 10px;">
+                கணக்கிடப்படுகிறது... தயவுசெய்து காத்திருக்கவும்...
+            </div>
+
+            <div id="match-results" style="display:none;">
+                <h3 style="text-align:center; color:#cc0066; border-bottom:1px solid #ccc; padding-bottom:5px;">நட்சத்திரப் பொருத்தம் (10 பொருத்தங்கள்)</h3>
+                <div style="overflow-x:auto;">
+                    <table class="sig-table match-result-table" id="porutham_table"></table>
+                </div>
+
+                <h3 style="text-align:center; color:#005580; margin-top:30px; border-bottom:1px solid #ccc; padding-bottom:5px;">ராசிக் கட்டம் ஒப்பீடு</h3>
+                <div class="chart-area">
+                    <div class="chart-container" id="g-chart">
+                        <div class="rasi-box box-11" id="g-box-11"></div><div class="rasi-box box-0" id="g-box-0"></div><div class="rasi-box box-1" id="g-box-1"></div><div class="rasi-box box-2" id="g-box-2"></div>
+                        <div class="rasi-box box-10" id="g-box-10"></div>
+                        <div class="center-box" id="g-center-info"></div>
+                        <div class="rasi-box box-3" id="g-box-3"></div>
+                        <div class="rasi-box box-9" id="g-box-9"></div><div class="rasi-box box-4" id="g-box-4"></div>
+                        <div class="rasi-box box-8" id="g-box-8"></div><div class="rasi-box box-7" id="g-box-7"></div><div class="rasi-box box-6" id="g-box-6"></div><div class="rasi-box box-5" id="g-box-5"></div>
+                    </div>
+
+                    <div class="chart-container" id="b-chart">
+                        <div class="rasi-box box-11" id="b-box-11"></div><div class="rasi-box box-0" id="b-box-0"></div><div class="rasi-box box-1" id="b-box-1"></div><div class="rasi-box box-2" id="b-box-2"></div>
+                        <div class="rasi-box box-10" id="b-box-10"></div>
+                        <div class="center-box" id="b-center-info"></div>
+                        <div class="rasi-box box-3" id="b-box-3"></div>
+                        <div class="rasi-box box-9" id="b-box-9"></div><div class="rasi-box box-4" id="b-box-4"></div>
+                        <div class="rasi-box box-8" id="b-box-8"></div><div class="rasi-box box-7" id="b-box-7"></div><div class="rasi-box box-6" id="b-box-6"></div><div class="rasi-box box-5" id="b-box-5"></div>
+                    </div>
+                </div>
+
+                <h3 style="text-align:center; color:#005580; margin-top:30px; border-bottom:1px solid #ccc; padding-bottom:5px;">நவாம்சக் கட்டம் ஒப்பீடு</h3>
+                <div class="chart-area">
+                    <div class="chart-container" id="g-nav-chart">
+                        <div class="rasi-box box-11" id="g-n-box-11"></div><div class="rasi-box box-0" id="g-n-box-0"></div><div class="rasi-box box-1" id="g-n-box-1"></div><div class="rasi-box box-2" id="g-n-box-2"></div>
+                        <div class="rasi-box box-10" id="g-n-box-10"></div>
+                        <div class="center-box"><span style="color:#cc0066; font-size:18px;">பெண் நவாம்சம்</span></div>
+                        <div class="rasi-box box-3" id="g-n-box-3"></div>
+                        <div class="rasi-box box-9" id="g-n-box-9"></div><div class="rasi-box box-4" id="g-n-box-4"></div>
+                        <div class="rasi-box box-8" id="g-n-box-8"></div><div class="rasi-box box-7" id="g-n-box-7"></div><div class="rasi-box box-6" id="g-n-box-6"></div><div class="rasi-box box-5" id="g-n-box-5"></div>
+                    </div>
+
+                    <div class="chart-container" id="b-nav-chart">
+                        <div class="rasi-box box-11" id="b-n-box-11"></div><div class="rasi-box box-0" id="b-n-box-0"></div><div class="rasi-box box-1" id="b-n-box-1"></div><div class="rasi-box box-2" id="b-n-box-2"></div>
+                        <div class="rasi-box box-10" id="b-n-box-10"></div>
+                        <div class="center-box"><span style="color:#005580; font-size:18px;">ஆண் நவாம்சம்</span></div>
+                        <div class="rasi-box box-3" id="b-n-box-3"></div>
+                        <div class="rasi-box box-9" id="b-n-box-9"></div><div class="rasi-box box-4" id="b-n-box-4"></div>
+                        <div class="rasi-box box-8" id="b-n-box-8"></div><div class="rasi-box box-7" id="b-n-box-7"></div><div class="rasi-box box-6" id="b-n-box-6"></div><div class="rasi-box box-5" id="b-n-box-5"></div>
+                    </div>
+                </div>
+
+                <h3 style="text-align:center; color:#005580; margin-top:30px; border-bottom:1px solid #ccc; padding-bottom:5px;">கிரக குறிகாட்டிகள் ஒப்பீடு (நடப்பு தசா/புக்தியுடன்)</h3>
+                <div class="sig-container">
+                    <div class="sig-panel" id="g-sig-panel"></div>
+                    <div class="sig-panel" id="b-sig-panel"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="folderModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 style="margin:0;">📁 சேமித்த ஜாதகங்கள்</h3>
+                <button class="modal-close" onclick="closeFolderModal()">&times;</button>
+            </div>
+            <div class="folder-search-bar">
+                <input type="text" id="searchInput" placeholder="🔍 பெயரைக் கொண்டு தேடுக..." onkeyup="filterSavedProfiles()">
+            </div>
+            <div id="folderList" class="folder-list"></div>
+        </div>
+    </div>
+
+    <div id="panchModal" class="modal-overlay">
+        <div class="modal-box" style="max-width:900px;">
+            <div class="modal-header">
+                <h3 style="margin:0;">📜 மாதாந்திர பஞ்சாங்கம்</h3>
+                <button class="modal-close" onclick="document.getElementById('panchModal').style.display='none'">&times;</button>
+            </div>
+            <div class="modal-content" style="padding:10px;">
+                <div class="cal-controls">
+                    <button onclick="changeMonth(-1)">&#9664; முந்தைய மாதம்</button>
+                    <h3 id="cal-month-title" style="margin:0; color:#005580;"></h3>
+                    <button onclick="changeMonth(1)">அடுத்த மாதம் &#9654;</button>
+                </div>
+                
+                <div id="panch-loading" style="text-align:center; color:blue; font-weight:bold; display:none;">கணக்கிடப்படுகிறது...</div>
+                
+                <div class="calendar-grid" id="panch-cal-grid">
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="microModal" class="modal-overlay">
+        <div class="modal-box" style="max-width:750px;">
+            <div class="modal-header">
+                <h3 style="margin:0;">📌 ஜாதக நுட்ப நிலைகள் (4 Levels)</h3>
+                <button class="modal-close" onclick="document.getElementById('microModal').style.display='none'">&times;</button>
+            </div>
+            <div class="modal-content">
+                <div style="background:#fff3e0; padding:10px; border-radius:5px; border:1px solid #ffb74d; margin-bottom:15px; display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:center;">
+                    <b style="color:#d84315;">நேரத் திருத்தம்:</b> 
+                    <input type="date" id="float_dob" style="padding:5px;">
+                    <input type="time" id="float_tob" step="1" style="padding:5px;">
+                    <button onclick="checkMicroTime()" style="background:#005580; color:white; border:none; padding:6px 12px; cursor:pointer; font-weight:bold; border-radius:4px;">🔄 சரிபார்</button>
+                    <button onclick="saveMicroTime()" style="background:#28a745; color:white; border:none; padding:6px 12px; cursor:pointer; font-weight:bold; border-radius:4px;">💾 சேமி</button>
+                </div>
+
+                <table class="micro-table">
+                    <thead>
+                        <tr><th>நிலை</th><th>ராசி</th><th>நட்சத்திரம்</th><th>உப (Sub)</th><th>உப-உப (SS)</th><th>உ.உ.உப (SSS)</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <select id="microBhavaSelect" onchange="populateMicroTable()" style="padding:4px; font-weight:bold; border-color:#cc0066; color:#cc0066; border-radius:4px; outline:none; cursor:pointer;">
+                                    <option value="0">1-ம் பாவம் (லக்னம்)</option><option value="1">2-ம் பாவம்</option><option value="2">3-ம் பாவம்</option><option value="3">4-ம் பாவம்</option><option value="4">5-ம் பாவம்</option><option value="5">6-ம் பாவம்</option><option value="6">7-ம் பாவம்</option><option value="7">8-ம் பாவம்</option><option value="8">9-ம் பாவம்</option><option value="9">10-ம் பாவம்</option><option value="10">11-ம் பாவம்</option><option value="11">12-ம் பாவம்</option>
+                                </select>
+                            </td>
+                            <td id="m_b_rashi">-</td><td id="m_b_star">-</td><td id="m_b_sub" style="color:#005580;">-</td><td id="m_b_ss" style="color:#d84315;">-</td><td id="m_b_sss" style="color:#008000;">-</td>
+                        </tr>
+                        <tr>
+                            <td style="color:#cc0066; font-weight:bold;">பிறப்பு சந்திரன்</td>
+                            <td id="m_c_rashi">-</td><td id="m_c_star">-</td><td id="m_c_sub" style="color:#005580;">-</td><td id="m_c_ss" style="color:#d84315;">-</td><td id="m_c_sss" style="color:#008000;">-</td>
+                        </tr>
+                    </tbody>
+                    <tr class="micro-divider"><td colspan="6">கோட்சார நிலைகள் (தற்போதைய நேரம்)</td></tr>
+                    <tbody id="micro-tbody-transit"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script>
+    const API_BASE_URL = 'http://127.0.0.1:5000'; 
+
+    const rasiShortMap = {"மேஷம்":"மேஷ", "ரிஷபம்":"ரிஷ", "மிதுனம்":"மிது", "கடகம்":"கடக", "சிம்மம்":"சிம்", "கன்னி":"கன்", "துலாம்":"துலா", "விருச்சிகம்":"விரு", "தனுசு":"தனு", "மகரம்":"மகர", "கும்பம்":"கும்", "மீனம்":"மீன"};
+    const starShort = {"அஸ்வினி":"அஸ்வி", "பரணி":"பரணி", "கிருத்திகை":"கிருத்", "ரோகிணி":"ரோகி", "மிருகசீரிடம்":"மிருக", "திருவாதிரை":"திருவா", "புனர்பூசம்":"புனர்", "பூசம்":"பூசம்", "ஆயில்யம்":"ஆயில்", "மகம்":"மகம்", "பூரம்":"பூரம்", "உத்திரம்":"உத்தி", "அஸ்தம்":"அஸ்தம்", "சித்திரை":"சித்தி", "சுவாதி":"சுவாதி", "விசாகம்":"விசா", "அனுஷம்":"அனுஷ", "கேட்டை":"கேட்டை", "மூலம்":"மூலம்", "பூராடம்":"பூராட", "உத்திராடம்":"உ.ஆட", "திருவோணம்":"திருவோ", "அவிட்டம்":"அவிட்", "சதயம்":"சதயம்", "பூரட்டாதி":"பூ.ரட்", "உத்திரட்டாதி":"உ.ரட்", "ரேவதி":"ரேவதி"};
+    
+    const rasiNames = ["மேஷம்", "ரிஷபம்", "மிதுனம்", "கடகம்", "சிம்மம்", "கன்னி", "துலாம்", "விருச்சிகம்", "தனுசு", "மகரம்", "கும்பம்", "மீனம்"];
+    const starNames = ["அஸ்வினி", "பரணி", "கிருத்திகை", "ரோகிணி", "மிருகசீரிடம்", "திருவாதிரை", "புனர்பூசம்", "பூசம்", "ஆயில்யம்", "மகம்", "பூரம்", "உத்திரம்", "அஸ்தம்", "சித்திரை", "சுவாதி", "விசாகம்", "அனுஷம்", "கேட்டை", "மூலம்", "பூராடம்", "உத்திராடம்", "திருவோணம்", "அவிட்டம்", "சதயம்", "பூரட்டாதி", "உத்திரட்டாதி", "ரேவதி"];
+    const DASA_LORDS = [{name: "கேது", years: 7}, {name: "சுக்", years: 20}, {name: "சூரி", years: 6}, {name: "சந்", years: 10}, {name: "செவ்", years: 7}, {name: "ராகு", years: 18}, {name: "குரு", years: 16}, {name: "சனி", years: 19}, {name: "புத", years: 17}];
+    
+    let globalBasicInfo = null; let globalPlanets = []; let globalBhavas = []; 
+    let globalPlanetSigs = []; let globalCuspSigs = [];
+    let globalTransitPlanets = [];
+    let currentSelectedDateMs = Date.now(); let currentMode = 'normal'; 
+    let requestIsKP = false; let requestKPNum = 0;
+
+    let currentPanchMonth = new Date().getMonth() + 1;
+    let currentPanchYear = new Date().getFullYear();
+
+    // --- View Toggler (Single App <--> Match App) ---
+    function toggleMatchView() {
+        let singleView = document.getElementById('single-app-view');
+        let matchView = document.getElementById('match-app-view');
+        let toggleBtn = document.getElementById('toggle-view-btn');
+        
+        if(matchView.style.display === 'none') {
+            singleView.style.display = 'none';
+            matchView.style.display = 'block';
+            toggleBtn.innerHTML = '🔙 தனி ஜாதகம் பார்க்க';
+            toggleBtn.style.background = '#28a745';
+            populateMatchDropdowns();
+        } else {
+            matchView.style.display = 'none';
+            singleView.style.display = 'block';
+            toggleBtn.innerHTML = '💖 திருமண பொருத்தம்';
+            toggleBtn.style.background = '#cc0066';
+        }
+    }
+
+    // --- UI Helpers ---
+    function setNowTime(dId='dob', tId='tob') {
+        const now = new Date();
+        document.getElementById(dId).value = now.toISOString().split('T')[0];
+        document.getElementById(tId).value = now.toTimeString().slice(0,8);
+    }
+
+    function toggleHorary() {
+        let chk = document.getElementById('is_kp_horary').checked;
+        document.getElementById('kp_number').style.display = chk ? 'inline-block' : 'none';
+        document.getElementById('btn_random_kp').style.display = chk ? 'inline-block' : 'none';
+    }
+
+    function generateRandomKP() {
+        let randomNum = Math.floor(Math.random() * 249) + 1;
+        document.getElementById('kp_number').value = randomNum;
+    }
+
+    function fetchCoordinatesFromNet(placeId, latId, lonId) {
+        let city = document.getElementById(placeId).value.trim();
+        if(!city) { alert("ஊரின் பெயரை ஆங்கிலத்தில் உள்ளிடவும்."); return; }
+        document.getElementById(latId).value = "Loading..."; document.getElementById(lonId).value = "Loading...";
+        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${city}`).then(res => res.json()).then(data => {
+            if(data && data.length > 0) { 
+                document.getElementById(latId).value = parseFloat(data[0].lat).toFixed(5); 
+                document.getElementById(lonId).value = parseFloat(data[0].lon).toFixed(5); 
+            } else { 
+                alert("ஊர் கிடைக்கவில்லை!"); document.getElementById(latId).value = ""; document.getElementById(lonId).value = ""; 
+            }
+        }).catch(err => alert("இணையப் பிழை!"));
+    }
+
+    // --- Folder / Profile Logic ---
+    function saveProfile() {
+        let name = document.getElementById('p_name').value || "பெயரில்லாத ஜாதகம்";
+        let profile = {
+            name: name, gender: document.getElementById('p_gender').value, place: document.getElementById('p_place').value,
+            dob: document.getElementById('dob').value, tob: document.getElementById('tob').value,
+            lat: document.getElementById('lat').value, lon: document.getElementById('lon').value
+        };
+        let saved = JSON.parse(localStorage.getItem('bhaskara_profiles') || '[]');
+        saved.push(profile);
+        localStorage.setItem('bhaskara_profiles', JSON.stringify(saved));
+        alert("ஜாதகம் வெற்றிகரமாக போல்டரில் சேமிக்கப்பட்டது!");
+        populateMatchDropdowns();
+    }
+
+    function openFolderModal() { 
+        let fm = document.getElementById('folderModal');
+        if(fm) { fm.style.display = 'flex'; document.getElementById('searchInput').value = ''; renderFolderList(); }
+    }
+    function closeFolderModal() { 
+        let fm = document.getElementById('folderModal');
+        if(fm) fm.style.display = 'none'; 
+    }
+
+    function renderFolderList(filterText = "") {
+        let saved = JSON.parse(localStorage.getItem('bhaskara_profiles') || '[]');
+        let listContainer = document.getElementById('folderList');
+        if(!listContainer) return;
+        listContainer.innerHTML = '';
+        if (saved.length === 0) { listContainer.innerHTML = '<p style="text-align:center; color:#777; margin-top:20px;">சேமிக்கப்பட்ட ஜாதகங்கள் இல்லை.</p>'; return; }
+        saved.forEach((p, idx) => {
+            if (filterText && !p.name.toLowerCase().includes(filterText.toLowerCase())) return;
+            let div = document.createElement('div'); div.className = "folder-item";
+            let g = p.gender === "F" ? "பெண்" : (p.gender === "M" ? "ஆண்" : "");
+            let infoStr = `<div class="folder-info" onclick="loadProfile(${idx})"><h4>${p.name} <span style="font-size:11px; color:#999;">(${g})</span></h4><p>📅 ${p.dob} | 📍 ${p.place}</p></div>`;
+            let delBtn = `<button class="folder-delete" onclick="deleteProfile(${idx}, event)">🗑️ அழி</button>`;
+            div.innerHTML = infoStr + delBtn; listContainer.appendChild(div);
+        });
+    }
+    function filterSavedProfiles() { 
+        let searchInput = document.getElementById('searchInput');
+        if(searchInput) renderFolderList(searchInput.value); 
+    }
+
+    function loadProfile(idx) {
+        let saved = JSON.parse(localStorage.getItem('bhaskara_profiles') || '[]');
+        let p = saved[idx];
+        if(p) {
+            document.getElementById('p_name').value = p.name; 
+            if(p.gender) document.getElementById('p_gender').value = p.gender;
+            document.getElementById('p_place').value = p.place;
+            document.getElementById('dob').value = p.dob; document.getElementById('tob').value = p.tob;
+            document.getElementById('lat').value = p.lat; document.getElementById('lon').value = p.lon;
+            closeFolderModal();
+            
+            // Switch to Single view if loading from folder
+            if(document.getElementById('match-app-view').style.display === 'block') {
+                toggleMatchView();
+            }
+        }
+    }
+
+    function deleteProfile(idx, event) {
+        event.stopPropagation();
+        if(confirm("இந்த ஜாதகத்தை போல்டரிலிருந்து அழிக்க வேண்டுமா?")) {
+            let saved = JSON.parse(localStorage.getItem('bhaskara_profiles') || '[]');
+            saved.splice(idx, 1); localStorage.setItem('bhaskara_profiles', JSON.stringify(saved)); filterSavedProfiles();
+            populateMatchDropdowns();
+        }
+    }
+
+    function populateMatchDropdowns() {
+        let loadG = document.getElementById('load_girl');
+        let loadB = document.getElementById('load_boy');
+        if(!loadG || !loadB) return;
+        loadG.innerHTML = '<option value="">-- சேமித்த ஜாதகத்தை எடுக்க --</option>';
+        loadB.innerHTML = '<option value="">-- சேமித்த ஜாதகத்தை எடுக்க --</option>';
+        let saved = JSON.parse(localStorage.getItem('bhaskara_profiles') || '[]');
+        saved.forEach((p, i) => {
+            let opt = new Option(p.name + ` (${p.place})`, i);
+            if(p.gender === 'F') loadG.add(opt.cloneNode(true));
+            else if(p.gender === 'M') loadB.add(opt.cloneNode(true));
+            else { loadG.add(opt.cloneNode(true)); loadB.add(opt.cloneNode(true)); }
+        });
+    }
+
+    function loadMatchProfile(idx, type) {
+        if(!idx) return;
+        let saved = JSON.parse(localStorage.getItem('bhaskara_profiles') || '[]');
+        let p = saved[idx];
+        if(p) {
+            document.getElementById(type + '_name').value = p.name;
+            document.getElementById(type + '_place').value = p.place;
+            document.getElementById(type + '_dob').value = p.dob;
+            document.getElementById(type + '_tob').value = p.tob;
+            document.getElementById(type + '_lat').value = p.lat;
+            document.getElementById(type + '_lon').value = p.lon;
+        }
+    }
+
+    // --- Core Logic ---
+    function switchTab(tabId, btnElement) {
+        let contents = document.getElementsByClassName('tab-content');
+        for(let i=0; i<contents.length; i++) contents[i].classList.remove('active');
+        let t = document.getElementById(tabId);
+        if(t) t.classList.add('active');
+        let btns = document.getElementsByClassName('tab-btn');
+        for(let i=0; i<btns.length; i++) btns[i].classList.remove('active');
+        if(btnElement) btnElement.classList.add('active');
+    }
+
+    function formatDasaDate(d) { return ('0' + d.getDate()).slice(-2) + '.' + ('0' + (d.getMonth() + 1)).slice(-2) + '.' + d.getFullYear(); }
+    function formatFullDate(d) { return ('0' + d.getDate()).slice(-2) + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + d.getFullYear(); }
+
+    function getSubLordBhavas(planetName) {
+        if (!planetName || planetName === "---") return `<br><span style="color:#999; font-size:10px; font-weight:normal;">(-)</span>`;
+        let cuspsRuled = [];
+        if(globalBhavas) { globalBhavas.forEach(b => { if(b.bhu === planetName) cuspsRuled.push(b.cs); }); }
+        if (cuspsRuled.length > 0) return `<br><span style="color:#e65100; font-size:10px; font-weight:normal;">(${cuspsRuled.join(', ')})</span>`;
+        return `<br><span style="color:#999; font-size:10px; font-weight:normal;">(-)</span>`;
+    }
+
+    function getColoredEffectiveLinks(p_sig, stl_sig, sbl_sig, ssl_sig, stl_name, sbl_name) {
+        let combinedArr = [p_sig, stl_sig, sbl_sig];
+        if (stl_name === sbl_name && stl_name && stl_name !== "---" && ssl_sig) { combinedArr.push(ssl_sig); }
+        let combined = combinedArr.join(",");
+        let matches = combined.match(/\d+/g); 
+        if(!matches) return "-";
+        
+        let uniqueNums = [...new Set(matches.map(Number))];
+        let status = {}; let killersMap = {};
+        
+        for (let h of uniqueNums) {
+            let e = (h + 6) % 12 + 1; let t = (h + 10) % 12 + 1; 
+            let killers = [];
+            if (uniqueNums.includes(e)) killers.push(e);
+            if (uniqueNums.includes(t)) killers.push(t);
+            killersMap[h] = killers;
+        }
+        
+        let changed = true;
+        while(changed) {
+            changed = false;
+            for (let h of uniqueNums) {
+                if (status[h] !== undefined) continue; 
+                let aliveKillers = 0; let undecidedKillers = 0;
+                for (let k of killersMap[h]) {
+                    if (status[k] === true) aliveKillers++;
+                    else if (status[k] === undefined) undecidedKillers++;
+                }
+                if (aliveKillers > 0) { status[h] = false; changed = true; } 
+                else if (undecidedKillers === 0) { status[h] = true; changed = true; }
+            }
+        }
+        
+        for (let h of uniqueNums) { if (status[h] === undefined) status[h] = true; }
+        let finalNums = uniqueNums.filter(h => status[h]).sort((a,b) => a-b);
+        
+        if(finalNums.length === 0) return "-";
+        let coloredHtml = finalNums.map(num => `<span style="color:#008000; font-weight:bold; font-size: 15px;">${num}</span>`);
+        return `<div class="eff-link-box">${coloredHtml.join(", ")}</div>`;
+    }
+
+    function switchDasaMode() { currentMode = document.querySelector('input[name="transit_mode"]:checked').value; updateTransitAndDBA(currentSelectedDateMs, false); }
+    function getProgressedDate(targetMs) { let birthDateMs = new Date(globalBasicInfo.birth_dt).getTime(); let ageInMs = targetMs - birthDateMs; let ageInYears = ageInMs / (365.2425 * 24 * 60 * 60 * 1000); return birthDateMs + (ageInYears * 6557198); }
+
+    function getCurrentDBA(basicInfo, targetMs) {
+        if (!basicInfo || !basicInfo.theory_start_dt) return [];
+        let tDtMs = new Date(basicInfo.theory_start_dt).getTime();
+        let currTime = tDtMs;
+        let currentLordIdx = basicInfo.dasa_start_idx;
+        let duration = 120;
+        let result = [];
+        
+        for(let l=0; l<4; l++) {
+            let found = false; let tempTime = currTime;
+            for(let i=0; i<9; i++) {
+                let pIdx = (currentLordIdx + i) % 9; 
+                let py = duration * (DASA_LORDS[pIdx].years / 120); 
+                let pMs = py * 365.2425 * 24 * 3600 * 1000;
+                if (targetMs >= tempTime && targetMs < tempTime + pMs) { 
+                    result.push(DASA_LORDS[pIdx].name); 
+                    currentLordIdx = pIdx; duration = py; currTime = tempTime; found = true; break; 
+                }
+                tempTime += pMs;
+            }
+            if(!found) break; 
+        }
+        return result; 
+    }
+
+    function renderSignificators(currentDasa, currentBhukti, currentAntharam) {
+        if(!globalPlanetSigs || !globalCuspSigs) return;
+        let sigHtml = `<h4 style="margin:0; color:#005580;">கிரக குறிகாட்டிகள்</h4>`;
+        sigHtml += `<table class="sig-table" style="width:100%;"><tr><th>Planets</th><th>Star Lord</th><th>Sub Lord</th><th>Effective Links</th></tr>`;
+        
+        globalPlanetSigs.forEach(p => { 
+            let p_sig = p.p_sig; let stl = p.stl; let stl_sig = p.stl_sig;
+            let sbl = p.sbl; let sbl_sig = p.sbl_sig; let ssl = p.ssl; let ssl_sig = p.ssl_sig;
+            let isMoonModified = false;
+
+            if (p.pln === "சந்" && currentDasa && currentBhukti && currentAntharam) {
+                stl = currentDasa; sbl = currentBhukti; ssl = currentAntharam;
+                let d_obj = globalPlanetSigs.find(x => x.pln === stl); let b_obj = globalPlanetSigs.find(x => x.pln === sbl); let a_obj = globalPlanetSigs.find(x => x.pln === ssl);
+                stl_sig = d_obj ? d_obj.p_sig : ""; sbl_sig = b_obj ? b_obj.p_sig : ""; ssl_sig = a_obj ? a_obj.p_sig : "";
+                isMoonModified = true;
+            }
+
+            let effLinksHtml = getColoredEffectiveLinks(p_sig, stl_sig, sbl_sig, ssl_sig, stl, sbl);
+            let moonStyle = isMoonModified ? `background:#ffe6f2; border: 2px solid #cc0066;` : ``;
+
+            let sblDisplay = `<b>${sbl}</b><br><span style="font-size:11px;">(${sbl_sig})</span>`;
+            if (stl === sbl && stl && stl !== "---" && ssl) {
+                sblDisplay += `<hr style="margin:4px 0; border:0; border-top:1px dashed #999;">
+                               <span style="font-size:10px; color:#cc4400; font-weight:bold;">Sub-Sub: ${ssl}</span><br>
+                               <span style="font-size:10px; color:#cc4400;">(${ssl_sig})</span>`;
+            }
+
+            sigHtml += `<tr style="${moonStyle}">
+                <td><b style="color:#005580;">${p.pln}</b><br><span style="font-size:11px;">(${p_sig})</span></td>
+                <td><b style="${isMoonModified ? 'color:#cc0066;' : ''}">${stl}</b><br><span style="font-size:11px;">(${stl_sig})</span></td>
+                <td>${sblDisplay}</td>
+                <td style="background:#f0fff0;">${effLinksHtml}</td>
+            </tr>`; 
+        });
+        sigHtml += `</table>`;
+        
+        sigHtml += `<h4 style="margin-top:20px; color:#005580;">பாவ குறிகாட்டிகள்</h4>`;
+        sigHtml += `<table class="sig-table" style="width:100%;"><tr><th>Cs</th><th>Cusp Sub.L</th><th>St.L</th><th>Sub.L</th><th>Effective Links</th></tr>`;
+        globalCuspSigs.forEach(c => { 
+            let effLinksHtml = getColoredEffectiveLinks(c.sbl_sig, c.stl_sig, c.sub_sig, c.ssl_sig, c.stl, c.sub);
+            
+            let sblDisplay = `<b>${c.sub}</b><br><span style="font-size:11px;">(${c.sub_sig})</span>`;
+            if (c.stl === c.sub && c.stl && c.stl !== "---" && c.ssl) {
+                sblDisplay += `<hr style="margin:4px 0; border:0; border-top:1px dashed #999;">
+                               <span style="font-size:10px; color:#cc4400; font-weight:bold;">Sub-Sub: ${c.ssl}</span><br>
+                               <span style="font-size:10px; color:#cc4400;">(${c.ssl_sig})</span>`;
+            }
+
+            sigHtml += `<tr>
+                <td>${c.cs}</td>
+                <td><b style="color:#005580;">${c.sbl}</b><br><span style="font-size:11px;">(${c.sbl_sig})</span></td>
+                <td><b>${c.stl}</b><br><span style="font-size:11px;">(${c.stl_sig})</span></td>
+                <td>${sblDisplay}</td>
+                <td style="background:#f0fff0;">${effLinksHtml}</td>
+            </tr>`; 
+        });
+        sigHtml += `</table>`;
+        let tabSig = document.getElementById('tab-sig');
+        if(tabSig) tabSig.innerHTML = sigHtml;
+    }
+
+    function updateTransitAndDBA(ms, autoHighlightGrid = false) {
+        currentSelectedDateMs = ms;
+        let selectedAgeDate = new Date(ms);
+        let tzOffset = selectedAgeDate.getTimezoneOffset() * 60000;
+        let localISOTime = (new Date(selectedAgeDate.getTime() - tzOffset)).toISOString().slice(0, 16);
+        let datePicker = document.getElementById('t_custom_date');
+        if(datePicker) datePicker.value = localISOTime;
+
+        let apiDateMs = ms;
+        let pdLabel = document.getElementById('prog-date-label');
+        let pct = document.getElementById('pop-center-text');
+        
+        if (currentMode === 'progression') {
+            apiDateMs = getProgressedDate(ms); let pd = new Date(apiDateMs);
+            if(pdLabel) {
+                pdLabel.innerHTML = `<span style="color:#005580;">லக்ன தசா (வானியல் நேரம்):<br></span> <b style="color:#cc0000; font-size:14px;">${('0'+pd.getDate()).slice(-2)}-${('0'+(pd.getMonth()+1)).slice(-2)}-${pd.getFullYear()} ${('0'+pd.getHours()).slice(-2)}:${('0'+pd.getMinutes()).slice(-2)}</b>`;
+                pdLabel.style.display = 'block';
+            }
+            if(pct) pct.innerHTML = `லக்ன தசா கட்டம்<br><span style="font-size:11px; color:#555;">${formatFullDate(pd)}<br>${('0'+pd.getHours()).slice(-2)}:${('0'+pd.getMinutes()).slice(-2)}</span>`;
+        } else {
+            if(pdLabel) pdLabel.style.display = 'none';
+            let pd = new Date(apiDateMs);
+            if(pct) pct.innerHTML = `கோட்சார கட்டம்<br><span style="font-size:11px; color:#555;">${formatFullDate(pd)}<br>${('0'+pd.getHours()).slice(-2)}:${('0'+pd.getMinutes()).slice(-2)}</span>`;
+        }
+
+        let apiDate = new Date(apiDateMs);
+        let dateStr = apiDate.getFullYear() + "-" + ('0'+(apiDate.getMonth()+1)).slice(-2) + "-" + ('0'+apiDate.getDate()).slice(-2);
+        let timeStr = ('0'+apiDate.getHours()).slice(-2) + ":" + ('0'+apiDate.getMinutes()).slice(-2) + ":00";
+        let ayanamsa = document.getElementById('ayanamsa') ? document.getElementById('ayanamsa').value : 'kp';
+
+        fetch(`${API_BASE_URL}/transit`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ datetime: dateStr + " " + timeStr, lat: document.getElementById('lat') ? document.getElementById('lat').value : '11', lon: document.getElementById('lon') ? document.getElementById('lon').value : '78', ayanamsa: ayanamsa })
+        }).then(res => res.json()).then(data => {
+            if(data.status === 'success') {
+                globalTransitPlanets = data.t_planets; 
+                
+                for(let i=0; i<12; i++) { 
+                    let pbox = document.getElementById('pop-box-'+i);
+                    if(pbox) pbox.innerHTML = ''; 
+                }
+                data.t_planets.forEach(tp => {
+                    let sName = starShort[tp.star] || tp.star.substring(0,4);
+                    let label = tp.pln === "லக்" ? "லக்னம்" : tp.pln;
+                    let pbox = document.getElementById('pop-box-' + tp.rasi_no);
+                    if(pbox) pbox.innerHTML += `<div class="pop-item">${label} <span class="detail-text" style="font-size:9px;">${sName}-${tp.pada} ${tp.sbl}</span></div>`;
+                });
+
+                if(!globalBasicInfo) return;
+                
+                let tDtMs = new Date(globalBasicInfo.theory_start_dt).getTime();
+                let currTime = tDtMs;
+                let dbaResult = []; let currentLordIdx = globalBasicInfo.dasa_start_idx; let duration = 120; let levels = ["தசா", "புக்தி", "அந்", "சூச்"];
+                
+                for(let l=0; l<4; l++) {
+                    let found = false; let tempTime = currTime;
+                    for(let i=0; i<9; i++) {
+                        let pIdx = (currentLordIdx + i) % 9; let py = duration * (DASA_LORDS[pIdx].years / 120); let pMs = py * 365.2425 * 24 * 3600 * 1000;
+                        if (ms >= tempTime && ms < tempTime + pMs) { dbaResult.push({level: levels[l], pln: DASA_LORDS[pIdx].name}); currentLordIdx = pIdx; duration = py; currTime = tempTime; found = true; break; }
+                        tempTime += pMs;
+                    }
+                    if(!found) break; 
+                }
+                
+                let d_pln = dbaResult[0] ? dbaResult[0].pln : null; let b_pln = dbaResult[1] ? dbaResult[1].pln : null; let a_pln = dbaResult[2] ? dbaResult[2].pln : null;
+                renderSignificators(d_pln, b_pln, a_pln);
+                
+                let dbaHtml = '';
+                dbaResult.forEach(item => {
+                    let tData = data.t_planets.find(x => x.pln === item.pln);
+                    let stl = tData ? tData.stl : "---"; let sbl = tData ? tData.sbl : "---"; 
+                    let plnBhavas = getSubLordBhavas(item.pln); let stlBhavas = getSubLordBhavas(stl); let sblBhavas = getSubLordBhavas(sbl);
+                    dbaHtml += `<tr><td style="background:#f9f9f9; text-align:left; padding-left:4px;"><b>${item.level}</b></td><td style="color:#005580; font-size:12px;"><b>${item.pln}</b>${plnBhavas}</td><td style="color:brown; font-size:12px;"><b>${stl}</b>${stlBhavas}</td><td style="color:blue; font-size:12px;"><b>${sbl}</b>${sblBhavas}</td></tr>`;
+                });
+                let c_dba = document.getElementById('current-dba-body');
+                if(c_dba) c_dba.innerHTML = dbaHtml;
+
+                if(autoHighlightGrid) { renderDasaLevel('col-1', globalBasicInfo.dasa_start_idx, 120, tDtMs, 1, true, ms); }
+                
+                if (document.getElementById('microModal').style.display === 'flex') {
+                    populateMicroTable();
+                }
+            }
+        }).catch(error => {
+            console.error("Transit Update Error:", error);
+        });
+    }
+
+    function applyCustomDate() { let val = document.getElementById('t_custom_date'); if(val && val.value) updateTransitAndDBA(new Date(val.value).getTime(), true); }
+    function resetToToday() { updateTransitAndDBA(Date.now(), true); }
+
+    function renderDasaLevel(colId, lordIdx, durationYears, startDateMs, level, autoCascade, targetMs = null) {
+        let html = ''; let currTime = startDateMs; let refTime = targetMs || Date.now(); let nextParams = null;
+        for(let i=0; i<9; i++) {
+            let currentLordIdx = (lordIdx + i) % 9; let currentLord = DASA_LORDS[currentLordIdx];
+            let periodYears = durationYears * (currentLord.years / 120); let periodMs = periodYears * 365.2425 * 24 * 60 * 60 * 1000;
+            let endTime = currTime + periodMs; let isActive = (refTime >= currTime && refTime < endTime);
+            if (isActive && autoCascade) { nextParams = { idx: currentLordIdx, yrs: periodYears, st: currTime }; }
+            let activeClass = isActive ? "active-dasa" : "";
+            let onClickStr = level < 4 ? `onclick="handleDasaClick(this, ${level+1}, ${currentLordIdx}, ${periodYears}, ${currTime})"` : `onclick="handleDasaClick(this, 5, ${currentLordIdx}, ${periodYears}, ${currTime})"`;
+            html += `<div class="dasa-item ${activeClass}" ${onClickStr}><span>${currentLord.name}</span><span>${formatDasaDate(new Date(currTime))}</span></div>`;
+            currTime = endTime;
+        }
+        let col = document.getElementById(colId);
+        if(col) col.innerHTML = html;
+        if (autoCascade && nextParams && level < 4) { renderDasaLevel('col-' + (level + 1), nextParams.idx, nextParams.yrs, nextParams.st, level + 1, true, refTime); }
+    }
+
+    window.handleDasaClick = function(element, nextLevel, lordIdx, durationYears, startDateMs) {
+        if(element && element.parentElement) {
+            let siblings = element.parentElement.children;
+            for(let s of siblings) { s.classList.remove('selected-dasa'); s.classList.remove('active-dasa'); }
+        }
+        if(element) element.classList.add('selected-dasa');
+        if(nextLevel <= 4) {
+            for(let l = nextLevel; l <= 4; l++) { 
+                let cl = document.getElementById('col-' + l);
+                if(cl) cl.innerHTML = ''; 
+            }
+            renderDasaLevel('col-' + nextLevel, lordIdx, durationYears, startDateMs, nextLevel, false);
+        }
+        updateTransitAndDBA(startDateMs, false);
+    };
+
+    function calculateAstrology() {
+        let cp = document.getElementById('control-panel-div');
+        if (cp) cp.innerHTML = "<p style='text-align:center; color:blue;'>கணக்கிடப்படுகிறது...</p>";
+        let md = document.getElementById('main-display');
+        if(md) md.style.display = "none";
+
+        requestIsKP = document.getElementById('is_kp_horary') ? document.getElementById('is_kp_horary').checked : false;
+        
+        let kpVal = document.getElementById('kp_number') ? document.getElementById('kp_number').value : '0';
+        requestKPNum = parseInt(kpVal);
+        if (isNaN(requestKPNum)) requestKPNum = 0;
+        
+        if (requestIsKP && (requestKPNum < 1 || requestKPNum > 249)) {
+            alert("தயவுசெய்து 1 முதல் 249 வரை உள்ள சரியான KP எண்ணை உள்ளிடவும்!");
+            if (cp) cp.innerHTML = "";
+            return;
+        }
+
+        const data = {
+            dob: document.getElementById('dob') ? document.getElementById('dob').value : '1981-12-30', 
+            tob: document.getElementById('tob') ? document.getElementById('tob').value : '03:29:30',
+            lat: document.getElementById('lat') ? document.getElementById('lat').value : '11.666', 
+            lon: document.getElementById('lon') ? document.getElementById('lon').value : '78.011',
+            ayanamsa: document.getElementById('ayanamsa') ? document.getElementById('ayanamsa').value : 'kp',
+            is_kp: requestIsKP,
+            kp_num: requestKPNum
+        };
+
+        fetch(`${API_BASE_URL}/calculate`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
+        .then(res => res.json())
+        .then(result => {
+            if(result.status === "success") {
+                globalBasicInfo = result.basic_info; globalPlanets = result.planets; globalBhavas = result.bhavas; 
+                globalPlanetSigs = result.planet_sigs; globalCuspSigs = result.cusp_sigs;
+                currentMode = 'normal'; 
+
+                let md = document.getElementById('main-display');
+                if(md) md.style.display = "flex";
+                
+                let pb = document.getElementById('printBtn');
+                if(pb) pb.style.display = "inline-block";
+                
+                for(let i=0; i<12; i++) { 
+                    let rb = document.getElementById('r-box-'+i); if(rb) rb.innerHTML = ''; 
+                    let nb = document.getElementById('n-box-'+i); if(nb) nb.innerHTML = ''; 
+                }
+                
+                result.bhavas.forEach(b => { 
+                    let sName = starShort[b.star] || b.star.substring(0,4);
+                    let rb = document.getElementById('r-box-' + b.rasi_no);
+                    if(rb) rb.innerHTML += `<div class="b-item"><b>${b.cs}</b> <span class="detail-text">${sName}-${b.pada} ${b.bhu}-${b.and}</span></div>`; 
+                });
+                result.planets.forEach(p => { 
+                    let sName = starShort[p.star] || p.star.substring(0,4);
+                    let rb = document.getElementById('r-box-' + p.rasi_no);
+                    if(rb) rb.innerHTML += `<div class="p-item"><b>${p.pln}</b> <span class="detail-text">${sName}-${p.pada} ${p.sbl}-${p.ssl}</span></div>`; 
+                });
+                
+                let bic = document.getElementById('basic-info-center');
+                let genderText = document.getElementById('p_gender').value === 'M' ? 'ஆண் ஜாதகம்' : 'பெண் ஜாதகம்';
+                let kpText = requestIsKP ? `<div style="color:#d84315; font-size:11px; margin-top:3px;">KP பிரசன்னம்: ${requestKPNum}</div>` : '';
+                
+                let lagnaPada = result.bhavas[0].pada;
+                let moonPada = result.planets.find(p => p.pln === 'சந்').pada;
+                let lagnaStar = starShort[result.basic_info.lagna_star] || result.basic_info.lagna_star;
+                let moonStar = starShort[result.basic_info.moon_star] || result.basic_info.moon_star;
+
+                if(bic) bic.innerHTML = `
+                    <div style="font-size:14px; color:#555; font-weight:bold; margin-bottom:3px;">${genderText}</div>
+                    <div style="font-size:13px; line-height:1.4;">
+                        <span style="color:#005580;">லக்:</span> <b style="color:#cc0066;">${rasiShortMap[result.basic_info.lagna]||result.basic_info.lagna} (${lagnaStar}-${lagnaPada})</b><br>
+                        <span style="color:#005580;">ராசி:</span> <b style="color:#cc0066;">${rasiShortMap[result.basic_info.moon_rasi]||result.basic_info.moon_rasi} (${moonStar}-${moonPada})</b>
+                    </div>${kpText}`;
+
+                result.bhavas.forEach(b => { 
+                    let nb = document.getElementById('n-box-' + b.nav_rasi_no);
+                    if(nb) nb.innerHTML += `<div class="b-item" style="color:red; font-size:12px;"><b>${b.cs === "1" ? "லக்" : b.cs}</b></div>`; 
+                });
+                result.planets.forEach(p => { 
+                    let nb = document.getElementById('n-box-' + p.nav_rasi_no);
+                    if(nb) nb.innerHTML += `<div class="p-item" style="font-size:13px;"><b>${p.pln}</b></div>`; 
+                });
+
+                let detHtml = `<h4 style="margin-top:0; color:#005580;">பாவ முனைகள் (Cusps)</h4>`;
+                detHtml += `<table class="sig-table details-table"><tr><th>பாவம்</th><th>பாகை</th><th>ராசி</th><th>நட்சத்திரம்</th><th>பா</th><th>உப</th><th>உப-உப</th></tr>`;
+                result.bhavas.forEach(b => { detHtml += `<tr><td><b>${b.cs}</b></td><td>${b.short_deg}</td><td>${rasiShortMap[b.rasi]||b.rasi.substring(0,3)}</td><td style="color:brown; font-weight:bold;">${starShort[b.star]||b.star.substring(0,4)}</td><td>${b.pada}</td><td style="color:blue;">${b.bhu}</td><td style="color:#cc4400;">${b.and}</td></tr>`; });
+                detHtml += `</table>`;
+                
+                detHtml += `<h4 style="margin-top:20px; color:#005580;">கிரக நிலைகள் (Planets)</h4>`;
+                detHtml += `<table class="sig-table details-table"><tr><th>கிரகம்</th><th>பாகை</th><th>ராசி</th><th>நட்சத்திரம்</th><th>பா</th><th>உப</th><th>உப-உப</th></tr>`;
+                result.planets.forEach(p => { detHtml += `<tr><td><b>${p.pln}</b></td><td>${p.short_deg}</td><td>${rasiShortMap[p.rasi]||p.rasi.substring(0,3)}</td><td style="color:brown; font-weight:bold;">${starShort[p.star]||p.star.substring(0,4)}</td><td>${p.pada}</td><td style="color:blue;">${p.sbl}</td><td style="color:#cc4400;">${p.ssl}</td></tr>`; });
+                detHtml += `</table>`;
+                let t_det = document.getElementById('tab-details');
+                if(t_det) t_det.innerHTML = detHtml;
+
+                let panelOut = ``;
+                panelOut += `<div style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap;">
+                            <h4 style="margin:0;">தசா-புக்தி & கோட்சாரக் கட்டுப்பாடு</h4>
+                            <div class="radio-toolbar">
+                                <input type="radio" id="rd_normal" name="transit_mode" value="normal" checked onchange="switchDasaMode()">
+                                <label for="rd_normal">கோட்சாரம்</label>
+                                <input type="radio" id="rd_prog" name="transit_mode" value="progression" onchange="switchDasaMode()">
+                                <label for="rd_prog">லக்ன தசா</label>
+                            </div>
+                        </div>`;
+
+                panelOut += `<div class="dasa-section-wrapper">
+                            <div class="dasa-grid-container">
+                                <div class="dasa-col"><div class="dasa-header"><span>தசா</span><span>Date</span></div><div id="col-1" class="dasa-list"></div></div>
+                                <div class="dasa-col"><div class="dasa-header"><span>புக்தி</span><span>Date</span></div><div id="col-2" class="dasa-list"></div></div>
+                                <div class="dasa-col"><div class="dasa-header"><span>அந்</span><span>Date</span></div><div id="col-3" class="dasa-list"></div></div>
+                                <div class="dasa-col"><div class="dasa-header"><span>சூச்</span><span>Date</span></div><div id="col-4" class="dasa-list"></div></div>
+                            </div>
+                            
+                            <div class="transit-control-panel">
+                                <h4 style="margin-top:0; color:#d84315;">தேதி & நேரம் (Age Date)</h4>
+                                <input type="datetime-local" id="t_custom_date">
+                                <div style="margin-top: 10px;">
+                                    <button onclick="applyCustomDate()" style="background:#ff9800; color:white; border:none; padding:6px 12px; border-radius:4px; cursor:pointer;">மாற்று</button>
+                                    <button onclick="resetToToday()" style="background:#4caf50; color:white; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; margin-left:5px;">இன்று</button>
+                                </div>
+                                
+                                <div id="prog-date-label" class="progress-badge"></div>
+
+                                <h4 style="margin-top:15px; color:#d84315;">தேர்ந்தெடுத்த நாதர்கள்</h4>
+                                <div class="table-responsive">
+                                <table class="sig-table" style="width:100%; text-align:center;">
+                                    <tr><th>நிலை</th><th>கிரகம்<br><span style="font-size:10px;">(உப.பா)</span></th><th>நட்<br><span style="font-size:10px;">(உப.பா)</span></th><th>உப<br><span style="font-size:10px;">(உப.பா)</span></th></tr>
+                                    <tbody id="current-dba-body"></tbody>
+                                </table>
+                                </div>
+                            </div>
+                        </div>`;
+
+                let cp = document.getElementById('control-panel-div');
+                if(cp) cp.innerHTML = panelOut;
+                
+                updateTransitAndDBA(Date.now(), true);
+
+            } else { 
+                let cp = document.getElementById('control-panel-div');
+                if(cp) cp.innerHTML = `<p style="color:red; text-align:center;">பைத்தான் பிழை: ${result.message}</p>`; 
+            }
+        }).catch(error => { 
+            console.error("UI Error:", error);
+            let cp = document.getElementById('control-panel-div');
+            if(cp) cp.innerHTML = `<p style="color:red; text-align:center; font-weight:bold;">சர்வர் பிழை அல்லது UI கணிதப் பிழை!</p><p style="color:#555; text-align:center; font-size:12px;">${error.message}</p><p style="text-align:center; font-size:12px; color:blue;">(உங்கள் பிரவுசரை ஒருமுறை Ctrl+F5 அழுத்தி Refresh செய்துவிட்டு மீண்டும் முயற்சிக்கவும்)</p>`; 
+        });
+    }
+
+    // ========================================================
+    // PANCHANGAM & MICRO MODALS (பஞ்சாங்கம் மற்றும் நுட்ப நிலைகள்)
+    // ========================================================
+
+    // பஞ்சாங்கம் மற்றும் காலண்டர்
+    const monthNamesTamil = ["ஜனவரி", "பிப்ரவரி", "மார்ச்", "ஏப்ரல்", "மே", "ஜூன்", "ஜூலை", "ஆகஸ்ட்", "செப்டம்பர்", "அக்டோபர்", "நவம்பர்", "டிசம்பர்"];
+    const weekDaysTamil = ["ஞாயிறு", "திங்கள்", "செவ்வாய்", "புதன்", "வியாழன்", "வெள்ளி", "சனி"];
+
+    function showPanchangam() {
+        document.getElementById('panchModal').style.display = 'flex';
+        fetchMonthlyPanchangam();
+    }
+
+    function changeMonth(step) {
+        currentPanchMonth += step;
+        if(currentPanchMonth > 12) { currentPanchMonth = 1; currentPanchYear++; }
+        else if(currentPanchMonth < 1) { currentPanchMonth = 12; currentPanchYear--; }
+        fetchMonthlyPanchangam();
+    }
+
+    function fetchMonthlyPanchangam() {
+        document.getElementById('panch-loading').style.display = 'block';
+        document.getElementById('panch-cal-grid').innerHTML = '';
+        document.getElementById('cal-month-title').innerText = `${monthNamesTamil[currentPanchMonth-1]} ${currentPanchYear}`;
+
+        let ayan = document.getElementById('ayanamsa') ? document.getElementById('ayanamsa').value : 'kp';
+        let lat = document.getElementById('lat') ? document.getElementById('lat').value : '11.12';
+        let lon = document.getElementById('lon') ? document.getElementById('lon').value : '78.00';
+
+        fetch(`${API_BASE_URL}/monthly_panchangam`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ year: currentPanchYear, month: currentPanchMonth, lat: lat, lon: lon, ayanamsa: ayan })
+        }).then(res => res.json()).then(data => {
+            document.getElementById('panch-loading').style.display = 'none';
+            if(data.status === 'success') {
+                renderCalendar(data.data);
+            } else {
+                alert("பஞ்சாங்க கணிதத்தில் பிழை: " + data.message);
+            }
+        }).catch(err => {
+            document.getElementById('panch-loading').style.display = 'none';
+            alert("சர்வர் பிழை!");
+        });
+    }
+
+    function renderCalendar(daysData) {
+        let grid = document.getElementById('panch-cal-grid');
+        let html = '';
+        
+        // Header
+        for(let i=0; i<7; i++) {
+            html += `<div class="cal-header">${weekDaysTamil[i]}</div>`;
+        }
+
+        // First day padding
+        let firstDayWeekday = (daysData[0].weekday + 1) % 7; // Convert Python (0=Mon) to JS (0=Sun)
+        for(let i=0; i<firstDayWeekday; i++) {
+            html += `<div class="cal-cell empty"></div>`;
+        }
+
+        // Days
+        daysData.forEach(d => {
+            let evtHtml = d.events.map(e => {
+                let cls = 'cal-event';
+                if(e.type === 'muhurtham') cls += ' evt-muhurtham';
+                if(e.type === 'eclipse') cls += ' evt-eclipse';
+                if(e.type === 'vastu') cls += ' evt-vastu';
+                if(e.type === 'vrat') cls += ' evt-vrat';
+                return `<div class="${cls}">${e.name}</div>`;
+            }).join('');
+
+            html += `
+                <div class="cal-cell">
+                    <div class="cal-date">${d.date}</div>
+                    <div class="cal-info"><b>${d.tithi}</b><br>${d.star}</div>
+                    ${evtHtml}
+                </div>
+            `;
+        });
+
+        grid.innerHTML = html;
+    }
+
+    function openMicroModal() {
+        if (!globalBasicInfo || !globalPlanets || !globalTransitPlanets) {
+            alert("முதலில் பிரதான ஜாதகத்தைக் கணக்கிடவும்!");
+            return;
+        }
+        document.getElementById('float_dob').value = document.getElementById('dob').value;
+        document.getElementById('float_tob').value = document.getElementById('tob').value;
+        populateMicroTable();
+        document.getElementById('microModal').style.display = 'flex';
+    }
+
+    // "சரிபார்" பட்டனுக்கான Function (நுட்ப நிலையில் மட்டுமே மாற்றும்)
+    function populateMicroTable(customBhavas = null, customPlanets = null) {
+        let bhavas = customBhavas || globalBhavas;
+        let planets = customPlanets || globalPlanets;
+        let tLagna = globalTransitPlanets.find(p => p.pln === 'லக்');
+        let tMoon = globalTransitPlanets.find(p => p.pln === 'சந்');
+
+        let selectedIdx = document.getElementById('microBhavaSelect').value;
+        let bBhava = bhavas[selectedIdx];
+        let bMoon = planets.find(p => p.pln === 'சந்');
+
+        if(bBhava && bMoon) {
+            document.getElementById('m_b_rashi').innerText = rasiShortMap[bBhava.rasi]||bBhava.rasi;
+            document.getElementById('m_b_star').innerText = starShort[bBhava.star]||bBhava.star;
+            document.getElementById('m_b_sub').innerText = bBhava.bhu || bBhava.sbl || "-";
+            document.getElementById('m_b_ss').innerText = bBhava.and || bBhava.ssl || "-";
+            document.getElementById('m_b_sss').innerText = bBhava.sssl || "-";
+
+            document.getElementById('m_c_rashi').innerText = rasiShortMap[bMoon.rasi]||bMoon.rasi;
+            document.getElementById('m_c_star').innerText = starShort[bMoon.star]||bMoon.star;
+            document.getElementById('m_c_sub').innerText = bMoon.sbl;
+            document.getElementById('m_c_ss').innerText = bMoon.ssl;
+            document.getElementById('m_c_sss').innerText = bMoon.sssl;
+        }
+
+        if(tLagna && tMoon) {
+            let tHtml = `
+                <tr><td style="color:#005580; font-weight:bold;">கோட்சார லக்னம்</td><td>${rasiShortMap[rasiNames[tLagna.rasi_no]]||rasiNames[tLagna.rasi_no]}</td><td>${starShort[tLagna.star]||tLagna.star}</td><td style="color:#005580;">${tLagna.sbl}</td><td style="color:#d84315;">${tLagna.ssl}</td><td style="color:#008000;">${tLagna.sssl}</td></tr>
+                <tr><td style="color:#005580; font-weight:bold;">கோட்சார சந்திரன்</td><td>${rasiShortMap[rasiNames[tMoon.rasi_no]]||rasiNames[tMoon.rasi_no]}</td><td>${starShort[tMoon.star]||tMoon.star}</td><td style="color:#005580;">${tMoon.sbl}</td><td style="color:#d84315;">${tMoon.ssl}</td><td style="color:#008000;">${tMoon.sssl}</td></tr>
+            `;
+            document.getElementById('micro-tbody-transit').innerHTML = tHtml;
+        }
+    }
+
+    function checkMicroTime() {
+        let floatDob = document.getElementById('float_dob').value;
+        let floatTob = document.getElementById('float_tob').value;
+        let lat = document.getElementById('lat').value;
+        let lon = document.getElementById('lon').value;
+        let ayan = document.getElementById('ayanamsa').value;
+
+        fetch(`${API_BASE_URL}/calculate`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ dob: floatDob, tob: floatTob, lat: lat, lon: lon, ayanamsa: ayan })
+        }).then(res => res.json()).then(result => {
+            if(result.status === "success") {
+                populateMicroTable(result.bhavas, result.planets);
+            } else {
+                alert("பிழை: " + result.message);
+            }
+        });
+    }
+
+    // ========================================================
+    // MATCH MAKING LOGIC (திருமணப் பொருத்தம் கணிதங்கள்)
+    // ========================================================
+
+    async function calculateMatch() {
+        document.getElementById('match-loading').style.display = 'block';
+        document.getElementById('match-results').style.display = 'none';
+
+        let ayan = document.getElementById('match_ayanamsa').value;
+        let gData = { dob: document.getElementById('g_dob').value, tob: document.getElementById('g_tob').value, lat: document.getElementById('g_lat').value, lon: document.getElementById('g_lon').value, ayanamsa: ayan };
+        let bData = { dob: document.getElementById('b_dob').value, tob: document.getElementById('b_tob').value, lat: document.getElementById('b_lat').value, lon: document.getElementById('b_lon').value, ayanamsa: ayan };
+
+        try {
+            let [gRes, bRes] = await Promise.all([
+                fetch(`${API_BASE_URL}/calculate`, { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(gData)}).then(r=>r.json()),
+                fetch(`${API_BASE_URL}/calculate`, { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(bData)}).then(r=>r.json())
+            ]);
+
+            if(gRes.status === "success" && bRes.status === "success") {
+                renderMatchChart(gRes, 'g', document.getElementById('g_name').value || "பெண்");
+                renderMatchChart(bRes, 'b', document.getElementById('b_name').value || "ஆண்");
+                
+                renderMatchNavamsaChart(gRes, 'g');
+                renderMatchNavamsaChart(bRes, 'b');
+
+                let gDBA = getCurrentDBA(gRes.basic_info, Date.now());
+                let bDBA = getCurrentDBA(bRes.basic_info, Date.now());
+
+                renderMatchSigs(gRes.planet_sigs, 'g', 'பெண் கிரக குறிகாட்டிகள்', gDBA);
+                renderMatchSigs(bRes.planet_sigs, 'b', 'ஆண் கிரக குறிகாட்டிகள்', bDBA);
+
+                calculatePorutham(gRes.basic_info.moon_star, bRes.basic_info.moon_star, gRes.basic_info.moon_rasi, bRes.basic_info.moon_rasi);
+                
+                document.getElementById('match-loading').style.display = 'none';
+                document.getElementById('match-results').style.display = 'block';
+            } else {
+                alert("கணிதத்தில் பிழை ஏற்பட்டுள்ளது! தரவுகளைச் சரிபார்க்கவும்.");
+                document.getElementById('match-loading').style.display = 'none';
+            }
+        } catch (e) {
+            console.error(e);
+            alert("கணிதத்தில் பிழை: " + e.message);
+            document.getElementById('match-loading').style.display = 'none';
+        }
+    }
+
+    function renderMatchChart(data, prefix, name) {
+        for(let i=0; i<12; i++) {
+            let el = document.getElementById(`${prefix}-box-${i}`);
+            if(el) el.innerHTML = '';
+        }
+        
+        data.bhavas.forEach(b => { 
+            let sName = starShort[b.star] || b.star.substring(0,4);
+            let el = document.getElementById(`${prefix}-box-${b.rasi_no}`);
+            if(el) el.innerHTML += `<div class="b-item"><b>${b.cs}</b> <span class="detail-text">${sName}-${b.pada} ${b.bhu}-${b.and}</span></div>`; 
+        });
+        data.planets.forEach(p => { 
+            let sName = starShort[p.star] || p.star.substring(0,4);
+            let el = document.getElementById(`${prefix}-box-${p.rasi_no}`);
+            if(el) el.innerHTML += `<div class="p-item"><b>${p.pln}</b> <span class="detail-text">${sName}-${p.pada} ${p.sbl}-${p.ssl}</span></div>`; 
+        });
+
+        let lPada = data.bhavas[0].pada;
+        let mPada = data.planets.find(p => p.pln === 'சந்').pada;
+        let lStar = starShort[data.basic_info.lagna_star] || data.basic_info.lagna_star;
+        let mStar = starShort[data.basic_info.moon_star] || data.basic_info.moon_star;
+
+        let cInfo = document.getElementById(`${prefix}-center-info`);
+        if(cInfo) {
+            cInfo.innerHTML = `
+            <div style="color:${prefix==='g'?'#cc0066':'#005580'}; font-size:16px; font-weight:bold; margin-bottom:5px;">${name}</div>
+            <div style="font-size:12px; line-height:1.4;">
+                <span style="color:#005580;">லக்:</span> <b style="color:black;">${rasiShortMap[data.basic_info.lagna]||data.basic_info.lagna} (${lStar}-${lPada})</b><br>
+                <span style="color:#005580;">ராசி:</span> <b style="color:black;">${rasiShortMap[data.basic_info.moon_rasi]||data.basic_info.moon_rasi} (${mStar}-${mPada})</b>
+            </div>`;
+        }
+    }
+
+    function renderMatchNavamsaChart(data, prefix) {
+        for(let i=0; i<12; i++) {
+            let el = document.getElementById(`${prefix}-n-box-${i}`);
+            if(el) el.innerHTML = '';
+        }
+        
+        data.bhavas.forEach(b => { 
+            let el = document.getElementById(`${prefix}-n-box-${b.nav_rasi_no}`);
+            if(el) el.innerHTML += `<div class="b-item" style="color:red; font-size:12px;"><b>${b.cs === "1" ? "லக்" : b.cs}</b></div>`; 
+        });
+        data.planets.forEach(p => { 
+            let el = document.getElementById(`${prefix}-n-box-${p.nav_rasi_no}`);
+            if(el) el.innerHTML += `<div class="p-item" style="font-size:13px;"><b>${p.pln}</b></div>`; 
+        });
+    }
+
+    function renderMatchSigs(sigs, prefix, title, dba) {
+        let html = `<h4 style="margin:0 0 10px 0; color:#${prefix==='g'?'cc0066':'005580'}; text-align:center;">${title}</h4>
+                    <table class="sig-table"><tr><th>Pln</th><th>Star Lord</th><th>Sub Lord</th><th>Links</th></tr>`;
+        
+        let cDasa = dba ? dba[0] : null;
+        let cBhukti = dba ? dba[1] : null;
+
+        sigs.forEach(p => {
+            let badge = "";
+            let bgStyle = "";
+            
+            if (p.pln === cDasa && p.pln === cBhukti) {
+                badge = `<br><span style="background:#cc0000; color:white; padding:2px 4px; border-radius:3px; font-size:10px;">தசா & புக்தி</span>`;
+                bgStyle = `background: #ffe6e6; border: 2px solid #cc0000;`;
+            } else if (p.pln === cDasa) {
+                badge = `<br><span style="background:#cc0000; color:white; padding:2px 4px; border-radius:3px; font-size:10px;">நடப்பு தசா</span>`;
+                bgStyle = `background: #ffe6e6; border: 2px solid #cc0000;`;
+            } else if (p.pln === cBhukti) {
+                badge = `<br><span style="background:#ff8c00; color:white; padding:2px 4px; border-radius:3px; font-size:10px;">நடப்பு புக்தி</span>`;
+                bgStyle = `background: #fff5e6; border: 2px solid #ff8c00;`;
+            }
+
+            html += `<tr style="${bgStyle}">
+                <td><b style="font-size:14px;">${p.pln}</b>${badge}<br><span style="font-size:12px; color:#444; font-weight:bold;">(${p.p_sig})</span></td>
+                <td><b style="font-size:14px;">${p.stl}</b><br><span style="font-size:12px; color:#444; font-weight:bold;">(${p.stl_sig})</span></td>
+                <td><b style="font-size:14px;">${p.sbl}</b><br><span style="font-size:12px; color:#444; font-weight:bold;">(${p.sbl_sig})</span></td>
+                <td style="background:#f0fff0;">${getColoredEffectiveLinks(p.p_sig, p.stl_sig, p.sbl_sig, p.ssl_sig, p.stl, p.sbl)}</td>
+            </tr>`;
+        });
+        html += `</table>`;
+        document.getElementById(`${prefix}-sig-panel`).innerHTML = html;
+    }
+
+    function calculatePorutham(gStarStr, bStarStr, gRasiStr, bRasiStr) {
+        let g = starNames.indexOf(gStarStr) + 1;
+        let b = starNames.indexOf(bStarStr) + 1;
+        let gR = rasiNames.indexOf(gRasiStr) + 1;
+        let bR = rasiNames.indexOf(bRasiStr) + 1;
+
+        if (g===0 || b===0 || gR===0 || bR===0) {
+            document.getElementById('porutham_table').innerHTML = `<tr><td style="color:red; font-weight:bold;">பிழை: நட்சத்திரம்/ராசி கண்டறியப்படவில்லை.</td></tr>`;
+            return;
+        }
+
+        let pData = []; let total = 0;
+        let dist = (b - g) >= 0 ? (b - g + 1) : (b - g + 28);
+        
+        let dinaArr = [2, 4, 6, 8, 9, 11, 13, 15, 18, 20, 24, 26];
+        let dina = dinaArr.includes(dist) || (g === b);
+        pData.push({name: "1. தினப் பொருத்தம் (ஆயுள்/ஆரோக்கியம்)", res: dina ? "உண்டு" : "இல்லை", cls: dina ? "match-yes" : "match-no"});
+        if(dina) total++;
+
+        let deva = [1,5,7,8,13,15,17,22,27]; let manushya = [2,4,6,11,12,20,21,25,26]; let rakshasa = [3,9,10,14,16,18,19,23,24];
+        let gGana = deva.includes(g) ? 'D' : (manushya.includes(g) ? 'M' : 'R');
+        let bGana = deva.includes(b) ? 'D' : (manushya.includes(b) ? 'M' : 'R');
+        let gana = false;
+        if(gGana === bGana) gana = true;
+        else if(gGana === 'D' && bGana === 'M') gana = true;
+        else if(gGana === 'M' && bGana === 'D') gana = true;
+        else if(gGana === 'R' && bGana === 'R') gana = true;
+        pData.push({name: "2. கணப் பொருத்தம் (குணம்/சுபாவம்)", res: gana ? "உண்டு" : "இல்லை", cls: gana ? "match-yes" : "match-no"});
+        if(gana) total++;
+
+        let mah = [4, 7, 10, 13, 16, 19, 22, 25].includes(dist);
+        pData.push({name: "3. மாகேந்திரப் பொருத்தம் (சந்ததி)", res: mah ? "உண்டு" : "இல்லை", cls: mah ? "match-yes" : "match-no"});
+        if(mah) total++;
+
+        let stree = dist > 13;
+        pData.push({name: "4. ஸ்திரீ தீர்க்கப் பொருத்தம் (செல்வம்)", res: stree ? "உண்டு" : "இல்லை", cls: stree ? "match-yes" : "match-no"});
+        if(stree) total++;
+
+        let yoni = true; 
+        let enemyStars = [[1,13], [2,23], [3,20], [4,9], [5,10], [6,17], [7,10], [8,20], [11,14], [12,14], [15,16], [18,19], [21,24], [22,25], [26,27]];
+        for(let p of enemyStars) { if((p[0]===g && p[1]===b) || (p[0]===b && p[1]===g)) yoni = false; }
+        pData.push({name: "5. யோனிப் பொருத்தம் (தாம்பத்தியம்)", res: yoni ? "உண்டு (பகை இல்லை)" : "இல்லை (பகை யோனி)", cls: yoni ? "match-yes" : "match-no"});
+        if(yoni) total++;
+
+        let rDist = (bR - gR); if(rDist < 0) rDist += 12; rDist += 1;
+        let rasi = (rDist === 7 || rDist > 6 || gR === bR);
+        pData.push({name: "6. ராசிப் பொருத்தம் (வம்ச விருத்தி)", res: rasi ? "உண்டு" : "இல்லை", cls: rasi ? "match-yes" : "match-no"});
+        if(rasi) total++;
+
+        let rl = true; if (rDist === 2 || rDist === 6 || rDist === 8 || rDist === 12) rl = false;
+        pData.push({name: "7. ராசியாதிபதிப் பொருத்தம் (ஒற்றுமை)", res: rl ? "உண்டு" : "இல்லை", cls: rl ? "match-yes" : "match-no"});
+        if(rl) total++;
+
+        let vas = false; if(gR===bR || rDist === 7 || rDist === 3 || rDist === 11 || rDist === 4) vas = true;
+        pData.push({name: "8. வசியப் பொருத்தம் (அன்யோன்யம்)", res: vas ? "உண்டு" : "இல்லை", cls: vas ? "match-yes" : "match-no"});
+        if(vas) total++;
+
+        let shiro = [5,14,23]; let kantha = [4,6,13,15,22,24]; let nabi = [3,7,12,16,21,25]; let kati = [2,8,11,17,20,26]; let pada = [1,9,10,18,19,27];
+        let gRajju = shiro.includes(g)?1 : kantha.includes(g)?2 : nabi.includes(g)?3 : kati.includes(g)?4 : pada.includes(g)?5 : 0;
+        let bRajju = shiro.includes(b)?1 : kantha.includes(b)?2 : nabi.includes(b)?3 : kati.includes(b)?4 : pada.includes(b)?5 : 0;
+        let rajju = (gRajju !== bRajju);
+        pData.push({name: "9. ரஜ்ஜுப் பொருத்தம் (மாங்கல்ய பாக்கியம்)", res: rajju ? "உண்டு (வெவ்வேறு ரஜ்ஜு)" : "இல்லை (ஒரே ரஜ்ஜு - தவிர்க்கவும்!)", cls: rajju ? "match-yes" : "match-no"});
+        if(rajju) total++;
+
+        let vedhaPairs = [[1,18], [2,17], [3,16], [4,15], [5,14], [6,13], [7,22], [8,21], [9,20], [10,27], [11,26], [12,25]];
+        let vedha = true;
+        for(let pair of vedhaPairs) { if((pair[0]===g && pair[1]===b) || (pair[0]===b && pair[1]===g)) vedha = false; }
+        pData.push({name: "10. வேதைப் பொருத்தம் (தோஷ நிவர்த்தி)", res: vedha ? "உண்டு (வேதை இல்லை)" : "இல்லை (வேதை தோஷம்)", cls: vedha ? "match-yes" : "match-no"});
+        if(vedha) total++;
+
+        let tHtml = `<tr><th>பொருத்தத்தின் பெயர்</th><th>உள்ளதா? / இல்லையா?</th></tr>`;
+        pData.forEach(d => { tHtml += `<tr><td style="text-align:left; padding-left:15px;"><b>${d.name}</b></td><td class="${d.cls}">${d.res}</td></tr>`; });
+        
+        let color = total >= 6 ? (total >= 8 ? "green" : "orange") : "red";
+        tHtml += `<tr><td colspan="2" style="font-size:16px; color:${color}; background:#ffffcc; padding:15px;">
+                  <b>முடிவு:</b> மொத்தம் <b>${total} / 10</b> பொருத்தங்கள் உள்ளன.<br>
+                  <span style="font-size:11px; color:#555;">(இது பொதுவான நட்சத்திரப் பொருத்தம் மட்டுமே. குறிகாட்டிகள் அடிப்படையில் பாஸ்கரா ஜோதிடர் தீர்க்கமாக முடிவு செய்க)</span>
+                  </td></tr>`;
+        document.getElementById('porutham_table').innerHTML = tHtml;
+    }
+    </script><script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then(reg => console.log('வெற்றிவேல் ஜோதிடம் ஆப் தயார்!'))
+        .catch(err => console.log('பதிவு செய்வதில் பிழை:', err));
+    });
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>திருமணப் பொருத்தம் - பாஸ்கரா ஜோதிடம்</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 10px; background-color: #ffe6f2; overflow-x: hidden;}
+        .container { max-width: 1300px; margin: auto; background: white; padding: 15px; box-shadow: 0px 0px 15px rgba(204,0,102,0.2); border-radius: 8px;}
+        h2 { color: #cc0066; text-align: center; border-bottom: 2px solid #ff99cc; padding-bottom: 10px;}
+        
+        .split-screen { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px;}
+        .profile-card { flex: 1; min-width: 300px; background: #fff9fc; border: 1px solid #ffb3d9; padding: 15px; border-radius: 8px;}
+        .profile-card.boy { background: #f0f8ff; border: 1px solid #99ccff;}
+        
+        .card-header { font-size: 18px; font-weight: bold; text-align: center; margin-bottom: 15px; padding: 5px; color: white;}
+        .girl-header { background: #cc0066; }
+        .boy-header { background: #005580; }
+
+        .input-row { display: flex; gap: 5px; margin-bottom: 10px; align-items: center; justify-content: space-between;}
+        .input-row input, .input-row select { padding: 6px; font-size: 13px; border: 1px solid #ccc; border-radius: 4px; width: 100%; box-sizing: border-box;}
+        
+        .btn-calc { background: #d84315; color: white; border: none; cursor: pointer; padding: 12px 30px; font-weight: bold; font-size: 16px; border-radius: 5px; width: 100%; max-width: 400px; margin: 10px auto; display: block; box-shadow: 0 4px 6px rgba(0,0,0,0.2);}
+        .btn-calc:hover { background: #bf360c; }
+        
+        .chart-area { display: flex; gap: 10px; justify-content: center; margin-top: 15px; flex-wrap: wrap;}
+        .chart-box { position: relative; width: 300px; height: 300px; background: #000; border: 2px solid #000; flex-shrink: 0;}
+        .rasi-box { position: absolute; width: 75px; height: 75px; background: #ffffcc; border: 1px solid #000; padding: 2px; box-sizing: border-box; font-size: 9px; overflow-y: auto; line-height: 1.2; }
+        .center-box { position: absolute; top: 75px; left: 75px; width: 150px; height: 150px; background: white; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #cc0066; font-size: 13px; font-weight: bold; text-align:center;}
+        
+        .box-11 { top: 0; left: 0; } .box-0 { top: 0; left: 75px; } .box-1 { top: 0; left: 150px; } .box-2 { top: 0; left: 225px; }
+        .box-10 { top: 75px; left: 0; } .box-3 { top: 75px; left: 225px; }
+        .box-9 { top: 150px; left: 0; } .box-4 { top: 150px; left: 225px; }
+        .box-8 { top: 225px; left: 0; } .box-7 { top: 225px; left: 75px; } .box-6 { top: 225px; left: 150px; } .box-5 { top: 225px; left: 225px; }
+
+        .b-item { color: red; margin-bottom: 2px; border-bottom: 1px dotted #ccc; padding-bottom: 2px;}
+        .p-item { color: #005580; margin-bottom: 2px; border-bottom: 1px dotted #ccc; padding-bottom: 2px;}
+        .detail-text { font-size: 8px; color: #444; font-weight: normal; display: block;}
+
+        table { width: 100%; border-collapse: collapse; text-align: center; font-size: 13px; margin-top: 10px; background: white;}
+        th, td { border: 1px solid #999; padding: 6px; }
+        th { background-color: #f0f0f0; color: #333; }
+        
+        .match-result-table th { background-color: #ffccff; color: #cc0066; font-size: 15px;}
+        .match-result-table .match-yes { color: #008000; font-weight: bold; background: #e6ffe6;}
+        .match-result-table .match-no { color: #cc0000; background: #ffe6e6;}
+        
+        .sig-container { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px;}
+        .sig-panel { flex: 1; min-width: 300px;}
+        .eff-link-box { padding: 2px; font-size: 12px; letter-spacing: 1px; }
+
+        @media (max-width: 800px) { .split-screen { flex-direction: column; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>💖 திருமணப் பொருத்தம் & ஜாதக ஒப்பீடு 💖</h2>
+        
+        <div class="split-screen">
+            <div class="profile-card">
+                <div class="card-header girl-header">பெண் ஜாதகம்</div>
+                <div class="input-row">
+                    <select id="load_girl" onchange="loadSavedProfile(this.value, 'g')">
+                        <option value="">-- சேமித்த ஜாதகத்தை எடுக்க --</option>
+                    </select>
+                </div>
+                <div class="input-row"><input type="text" id="g_name" placeholder="பெண் பெயர்"></div>
+                <div class="input-row">
+                    <input type="date" id="g_dob" value="1995-05-10">
+                    <input type="time" id="g_tob" value="10:30:00" step="1">
+                </div>
+                <div class="input-row">
+                    <input type="number" id="g_lat" placeholder="Lat" value="11.666" step="0.00001">
+                    <input type="number" id="g_lon" placeholder="Lon" value="78.011" step="0.00001">
+                </div>
+            </div>
+
+            <div class="profile-card boy">
+                <div class="card-header boy-header">ஆண் ஜாதகம்</div>
+                <div class="input-row">
+                    <select id="load_boy" onchange="loadSavedProfile(this.value, 'b')">
+                        <option value="">-- சேமித்த ஜாதகத்தை எடுக்க --</option>
+                    </select>
+                </div>
+                <div class="input-row"><input type="text" id="b_name" placeholder="ஆண் பெயர்"></div>
+                <div class="input-row">
+                    <input type="date" id="b_dob" value="1992-08-15">
+                    <input type="time" id="b_tob" value="14:45:00" step="1">
+                </div>
+                <div class="input-row">
+                    <input type="number" id="b_lat" placeholder="Lat" value="11.666" step="0.00001">
+                    <input type="number" id="b_lon" placeholder="Lon" value="78.011" step="0.00001">
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-bottom: 20px;">
+            <label style="font-weight:bold; color:#cc0066; margin-right:15px;">
+                அயனாம்சா: 
+                <select id="ayanamsa" style="padding:5px;">
+                    <option value="kp">KP Original</option>
+                    <option value="lahiri">Lahiri</option>
+                </select>
+            </label>
+            <button class="btn-calc" onclick="calculateMatch()">ஜாதகங்களை ஒப்பிடுக</button>
+        </div>
+
+        <div id="loading" style="display:none; text-align:center; color:blue; font-weight:bold; margin-bottom: 10px;">
+            கணக்கிடப்படுகிறது... தயவுசெய்து காத்திருக்கவும்...
+        </div>
+
+        <div id="results" style="display:none;">
+            <h3 style="text-align:center; color:#cc0066; border-bottom:1px solid #ccc; padding-bottom:5px;">நட்சத்திரப் பொருத்தம் (10 பொருத்தங்கள்)</h3>
+            <div style="overflow-x:auto;">
+                <table class="match-result-table" id="porutham_table">
+                    </table>
+            </div>
+
+            <h3 style="text-align:center; color:#005580; margin-top:30px; border-bottom:1px solid #ccc; padding-bottom:5px;">ராசிக் கட்டம் ஒப்பீடு</h3>
+            <div class="chart-area">
+                <div class="chart-box" id="g-chart">
+                    <div class="rasi-box box-11" id="g-box-11"></div><div class="rasi-box box-0" id="g-box-0"></div><div class="rasi-box box-1" id="g-box-1"></div><div class="rasi-box box-2" id="g-box-2"></div>
+                    <div class="rasi-box box-10" id="g-box-10"></div>
+                    <div class="center-box"><span id="g-center-name" style="color:#cc0066; font-size:16px;"></span><br><span id="g-center-info" style="color:#555; font-size:12px; margin-top:5px;"></span></div>
+                    <div class="rasi-box box-3" id="g-box-3"></div>
+                    <div class="rasi-box box-9" id="g-box-9"></div><div class="rasi-box box-4" id="g-box-4"></div>
+                    <div class="rasi-box box-8" id="g-box-8"></div><div class="rasi-box box-7" id="g-box-7"></div><div class="rasi-box box-6" id="g-box-6"></div><div class="rasi-box box-5" id="g-box-5"></div>
+                </div>
+
+                <div class="chart-box" id="b-chart">
+                    <div class="rasi-box box-11" id="b-box-11"></div><div class="rasi-box box-0" id="b-box-0"></div><div class="rasi-box box-1" id="b-box-1"></div><div class="rasi-box box-2" id="b-box-2"></div>
+                    <div class="rasi-box box-10" id="b-box-10"></div>
+                    <div class="center-box"><span id="b-center-name" style="color:#005580; font-size:16px;"></span><br><span id="b-center-info" style="color:#555; font-size:12px; margin-top:5px;"></span></div>
+                    <div class="rasi-box box-3" id="b-box-3"></div>
+                    <div class="rasi-box box-9" id="b-box-9"></div><div class="rasi-box box-4" id="b-box-4"></div>
+                    <div class="rasi-box box-8" id="b-box-8"></div><div class="rasi-box box-7" id="b-box-7"></div><div class="rasi-box box-6" id="b-box-6"></div><div class="rasi-box box-5" id="b-box-5"></div>
+                </div>
+            </div>
+
+            <h3 style="text-align:center; color:#005580; margin-top:30px; border-bottom:1px solid #ccc; padding-bottom:5px;">கிரக குறிகாட்டிகள் ஒப்பீடு</h3>
+            <div class="sig-container">
+                <div class="sig-panel" id="g-sig-panel"></div>
+                <div class="sig-panel" id="b-sig-panel"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://127.0.0.1:5000'; 
+        
+        const rasiMap = {"மேஷம்":"மேஷ", "ரிஷபம்":"ரிஷ", "மிதுனம்":"மிது", "கடகம்":"கடக", "சிம்மம்":"சிம்", "கன்னி":"கன்", "துலாம்":"துலா", "விருச்சிகம்":"விரு", "தனுசு":"தனு", "மகரம்":"மகர", "கும்பம்":"கும்", "மீனம்":"மீன"};
+        const starShort = {"அஸ்வினி":"அஸ்வி", "பரணி":"பரணி", "கிருத்திகை":"கிருத்", "ரோகிணி":"ரோகி", "மிருகசீரிடம்":"மிருக", "திருவாதிரை":"திருவா", "புனர்பூசம்":"புனர்", "பூசம்":"பூசம்", "ஆயில்யம்":"ஆயில்", "மகம்":"மகம்", "பூரம்":"பூரம்", "உத்திரம்":"உத்தி", "அஸ்தம்":"அஸ்தம்", "சித்திரை":"சித்தி", "சுவாதி":"சுவாதி", "விசாகம்":"விசா", "அனுஷம்":"அனுஷ", "கேட்டை":"கேட்டை", "மூலம்":"மூலம்", "பூராடம்":"பூராட", "உத்திராடம்":"உ.ஆட", "திருவோணம்":"திருவோ", "அவிட்டம்":"அவிட்", "சதயம்":"சதயம்", "பூரட்டாதி":"பூ.ரட்", "உத்திரட்டாதி":"உ.ரட்", "ரேவதி":"ரேவதி"};
+        
+        // 10 பொருத்தங்களுக்கான வரிசைகள் (Index)
+        const rasiNames = ["மேஷம்", "ரிஷபம்", "மிதுனம்", "கடகம்", "சிம்மம்", "கன்னி", "துலாம்", "விருச்சிகம்", "தனுசு", "மகரம்", "கும்பம்", "மீனம்"];
+        const starNames = ["அஸ்வினி", "பரணி", "கிருத்திகை", "ரோகிணி", "மிருகசீரிடம்", "திருவாதிரை", "புனர்பூசம்", "பூசம்", "ஆயில்யம்", "மகம்", "பூரம்", "உத்திரம்", "அஸ்தம்", "சித்திரை", "சுவாதி", "விசாகம்", "அனுஷம்", "கேட்டை", "மூலம்", "பூராடம்", "உத்திராடம்", "திருவோணம்", "அவிட்டம்", "சதயம்", "பூரட்டாதி", "உத்திரட்டாதி", "ரேவதி"];
+
+        let profiles = JSON.parse(localStorage.getItem('bhaskara_profiles') || '[]');
+
+        window.onload = function() {
+            let loadG = document.getElementById('load_girl');
+            let loadB = document.getElementById('load_boy');
+            profiles.forEach((p, i) => {
+                let opt = new Option(p.name + ` (${p.place})`, i);
+                if(p.gender === 'F') loadG.add(opt.cloneNode(true));
+                if(p.gender === 'M') loadB.add(opt.cloneNode(true));
+            });
+        };
+
+        function loadSavedProfile(idx, type) {
+            if(!idx) return;
+            let p = profiles[idx];
+            document.getElementById(type + '_name').value = p.name;
+            document.getElementById(type + '_dob').value = p.dob;
+            document.getElementById(type + '_tob').value = p.tob;
+            document.getElementById(type + '_lat').value = p.lat;
+            document.getElementById(type + '_lon').value = p.lon;
+        }
+
+        async function calculateMatch() {
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('results').style.display = 'none';
+
+            let ayan = document.getElementById('ayanamsa').value;
+            let gData = { dob: document.getElementById('g_dob').value, tob: document.getElementById('g_tob').value, lat: document.getElementById('g_lat').value, lon: document.getElementById('g_lon').value, ayanamsa: ayan };
+            let bData = { dob: document.getElementById('b_dob').value, tob: document.getElementById('b_tob').value, lat: document.getElementById('b_lat').value, lon: document.getElementById('b_lon').value, ayanamsa: ayan };
+
+            try {
+                let [gRes, bRes] = await Promise.all([
+                    fetch(`${API_BASE_URL}/calculate`, { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(gData)}).then(r=>r.json()),
+                    fetch(`${API_BASE_URL}/calculate`, { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(bData)}).then(r=>r.json())
+                ]);
+
+                if(gRes.status === "success" && bRes.status === "success") {
+                    // ராசிக் கட்டங்கள் வரைதல்
+                    renderChart(gRes, 'g', document.getElementById('g_name').value || "பெண்");
+                    renderChart(bRes, 'b', document.getElementById('b_name').value || "ஆண்");
+                    
+                    // குறிகாட்டிகள் அட்டவணை
+                    renderSigs(gRes.planet_sigs, 'g', 'பெண் குறிகாட்டிகள் (Planets)');
+                    renderSigs(bRes.planet_sigs, 'b', 'ஆண் குறிகாட்டிகள் (Planets)');
+
+                    // 10 பொருத்தங்கள் கணிதம்!
+                    calculatePorutham(gRes.basic_info.moon_star, bRes.basic_info.moon_star, gRes.basic_info.moon_rasi, bRes.basic_info.moon_rasi);
+                    
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('results').style.display = 'block';
+                } else {
+                    alert("கணிதத்தில் பிழை ஏற்பட்டுள்ளது! தரவுகளைச் சரிபார்க்கவும்.");
+                    document.getElementById('loading').style.display = 'none';
+                }
+            } catch (e) {
+                console.error(e);
+                alert("சர்வரைத் தொடர்புகொள்ள முடியவில்லை! பைத்தான் (backend.py) ஓடுகிறதா எனச் சரிபார்க்கவும்.\n" + e.message);
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+
+        function renderChart(data, prefix, name) {
+            for(let i=0; i<12; i++) document.getElementById(`${prefix}-box-${i}`).innerHTML = '';
+            
+            data.bhavas.forEach(b => { 
+                let sName = starShort[b.star] || b.star.substring(0,4);
+                document.getElementById(`${prefix}-box-${b.rasi_no}`).innerHTML += `<div class="b-item"><b>${b.cs}</b> <span class="detail-text">${sName}-${b.pada} ${b.bhu}-${b.and}</span></div>`; 
+            });
+            data.planets.forEach(p => { 
+                let sName = starShort[p.star] || p.star.substring(0,4);
+                document.getElementById(`${prefix}-box-${p.rasi_no}`).innerHTML += `<div class="p-item"><b>${p.pln}</b> <span class="detail-text">${sName}-${p.pada} ${p.sbl}-${p.ssl}</span></div>`; 
+            });
+
+            document.getElementById(`${prefix}-center-name`).innerText = name;
+            document.getElementById(`${prefix}-center-info`).innerHTML = `<b style="color:black;">${data.basic_info.moon_rasi} ராசி</b><br><b style="color:black;">${data.basic_info.moon_star} நட்.</b>`;
+        }
+
+        function getColoredLinks(p_sig, stl_sig, sbl_sig) {
+            let combined = [p_sig, stl_sig, sbl_sig].join(",");
+            let matches = combined.match(/\d+/g) || [];
+            let unique = [...new Set(matches.map(Number))].sort((a,b)=>a-b);
+            if(unique.length === 0) return "-";
+            return `<div class="eff-link-box">${unique.map(n => `<span style="color:#008000;font-weight:bold;font-size:14px;">${n}</span>`).join(", ")}</div>`;
+        }
+
+        function renderSigs(sigs, prefix, title) {
+            let html = `<h4 style="margin:0 0 10px 0; color:#${prefix==='g'?'cc0066':'005580'}; text-align:center;">${title}</h4>
+                        <table><tr><th>Pln</th><th>Star Lord</th><th>Sub Lord</th><th>Links</th></tr>`;
+            sigs.forEach(p => {
+                html += `<tr>
+                    <td><b>${p.pln}</b><br><span style="font-size:10px;">(${p.p_sig})</span></td>
+                    <td><b>${p.stl}</b><br><span style="font-size:10px;">(${p.stl_sig})</span></td>
+                    <td><b>${p.sbl}</b><br><span style="font-size:10px;">(${p.sbl_sig})</span></td>
+                    <td style="background:#f0fff0;">${getColoredLinks(p.p_sig, p.stl_sig, p.sbl_sig)}</td>
+                </tr>`;
+            });
+            html += `</table>`;
+            document.getElementById(`${prefix}-sig-panel`).innerHTML = html;
+        }
+
+        // ==========================================
+        // முழுமையான 10 பொருத்த கணித அல்காரிதம் (10 Poruthams Logic)
+        // ==========================================
+        function calculatePorutham(gStarStr, bStarStr, gRasiStr, bRasiStr) {
+            let g = starNames.indexOf(gStarStr) + 1;
+            let b = starNames.indexOf(bStarStr) + 1;
+            let gR = rasiNames.indexOf(gRasiStr) + 1;
+            let bR = rasiNames.indexOf(bRasiStr) + 1;
+
+            if (g===0 || b===0 || gR===0 || bR===0) {
+                document.getElementById('porutham_table').innerHTML = `<tr><td style="color:red; font-weight:bold;">பிழை: நட்சத்திரம்/ராசி கண்டறியப்படவில்லை.</td></tr>`;
+                return;
+            }
+
+            let pData = [];
+            let total = 0;
+
+            // பெண்ணின் நட்சத்திரத்தில் இருந்து ஆணின் நட்சத்திரம் வரை எண்ணுதல்
+            let dist = (b - g) >= 0 ? (b - g + 1) : (b - g + 28);
+            
+            // 1. தினப் பொருத்தம் (ஆயுள், ஆரோக்கியம்)
+            let dinaArr = [2, 4, 6, 8, 9, 11, 13, 15, 18, 20, 24, 26];
+            let dina = dinaArr.includes(dist) || (g === b);
+            pData.push({name: "1. தினப் பொருத்தம் (ஆயுள்/ஆரோக்கியம்)", res: dina ? "உண்டு" : "இல்லை", cls: dina ? "match-yes" : "match-no"});
+            if(dina) total++;
+
+            // 2. கணப் பொருத்தம் (குணம், சுபாவம்)
+            let deva = [1,5,7,8,13,15,17,22,27]; let manushya = [2,4,6,11,12,20,21,25,26]; let rakshasa = [3,9,10,14,16,18,19,23,24];
+            let gGana = deva.includes(g) ? 'D' : (manushya.includes(g) ? 'M' : 'R');
+            let bGana = deva.includes(b) ? 'D' : (manushya.includes(b) ? 'M' : 'R');
+            let gana = false;
+            if(gGana === bGana) gana = true;
+            else if(gGana === 'D' && bGana === 'M') gana = true;
+            else if(gGana === 'M' && bGana === 'D') gana = true;
+            else if(gGana === 'R' && bGana === 'R') gana = true;
+            pData.push({name: "2. கணப் பொருத்தம் (குணம்/சுபாவம்)", res: gana ? "உண்டு" : "இல்லை", cls: gana ? "match-yes" : "match-no"});
+            if(gana) total++;
+
+            // 3. மாகேந்திரப் பொருத்தம் (சந்ததி, புத்திர பாக்கியம்)
+            let mah = [4, 7, 10, 13, 16, 19, 22, 25].includes(dist);
+            pData.push({name: "3. மாகேந்திரப் பொருத்தம் (சந்ததி)", res: mah ? "உண்டு" : "இல்லை", cls: mah ? "match-yes" : "match-no"});
+            if(mah) total++;
+
+            // 4. ஸ்திரீ தீர்க்கப் பொருத்தம் (செல்வம், தீர்க்க சுமங்கலி)
+            let stree = dist > 13;
+            pData.push({name: "4. ஸ்திரீ தீர்க்கப் பொருத்தம் (செல்வம்)", res: stree ? "உண்டு" : "இல்லை", cls: stree ? "match-yes" : "match-no"});
+            if(stree) total++;
+
+            // 5. யோனிப் பொருத்தம் (தாம்பத்தியம்) - பகை விலக்கல்
+            let yoni = true; 
+            let enemyStars = [[1,13], [2,23], [3,20], [4,9], [5,10], [6,17], [7,10], [8,20], [11,14], [12,14], [15,16], [18,19], [21,24], [22,25], [26,27]]; // Simplified enmity map
+            for(let p of enemyStars) {
+                if((p[0]===g && p[1]===b) || (p[0]===b && p[1]===g)) yoni = false;
+            }
+            pData.push({name: "5. யோனிப் பொருத்தம் (தாம்பத்தியம்)", res: yoni ? "உண்டு (பகை இல்லை)" : "இல்லை (பகை யோனி)", cls: yoni ? "match-yes" : "match-no"});
+            if(yoni) total++;
+
+            // 6. ராசிப் பொருத்தம் (வம்ச விருத்தி)
+            let rDist = (bR - gR);
+            if(rDist < 0) rDist += 12;
+            rDist += 1;
+            let rasi = (rDist === 7 || rDist > 6 || gR === bR);
+            pData.push({name: "6. ராசிப் பொருத்தம் (வம்ச விருத்தி)", res: rasi ? "உண்டு" : "இல்லை", cls: rasi ? "match-yes" : "match-no"});
+            if(rasi) total++;
+
+            // 7. ராசியாதிபதிப் பொருத்தம் (ஒற்றுமை)
+            let rl = true; // Friendly lords check (Simplified default)
+            if (rDist === 2 || rDist === 6 || rDist === 8 || rDist === 12) rl = false;
+            pData.push({name: "7. ராசியாதிபதிப் பொருத்தம் (ஒற்றுமை)", res: rl ? "உண்டு" : "இல்லை", cls: rl ? "match-yes" : "match-no"});
+            if(rl) total++;
+
+            // 8. வசியப் பொருத்தம் (அன்யோன்யம்)
+            let vas = false;
+            if(gR===bR || rDist === 7 || rDist === 3 || rDist === 11 || rDist === 4) vas = true; // Approximation of Vasiya table
+            pData.push({name: "8. வசியப் பொருத்தம் (அன்யோன்யம்)", res: vas ? "உண்டு" : "இல்லை", cls: vas ? "match-yes" : "match-no"});
+            if(vas) total++;
+
+            // 9. ரஜ்ஜுப் பொருத்தம் (மாங்கல்ய பாக்கியம்) - The Most Important!
+            let shiro = [5,14,23]; let kantha = [4,6,13,15,22,24]; let nabi = [3,7,12,16,21,25]; let kati = [2,8,11,17,20,26]; let pada = [1,9,10,18,19,27];
+            let gRajju = shiro.includes(g)?1 : kantha.includes(g)?2 : nabi.includes(g)?3 : kati.includes(g)?4 : pada.includes(g)?5 : 0;
+            let bRajju = shiro.includes(b)?1 : kantha.includes(b)?2 : nabi.includes(b)?3 : kati.includes(b)?4 : pada.includes(b)?5 : 0;
+            let rajju = (gRajju !== bRajju); // Rajju should NOT match
+            pData.push({name: "9. ரஜ்ஜுப் பொருத்தம் (மாங்கல்ய பாக்கியம்)", res: rajju ? "உண்டு (வெவ்வேறு ரஜ்ஜு)" : "இல்லை (ஒரே ரஜ்ஜு - தவிர்க்கவும்!)", cls: rajju ? "match-yes" : "match-no"});
+            if(rajju) total++;
+
+            // 10. வேதைப் பொருத்தம் (தோஷ நிவர்த்தி)
+            let vedhaPairs = [[1,18], [2,17], [3,16], [4,15], [5,14], [6,13], [7,22], [8,21], [9,20], [10,27], [11,26], [12,25]];
+            let vedha = true;
+            for(let pair of vedhaPairs) {
+                if((pair[0]===g && pair[1]===b) || (pair[0]===b && pair[1]===g)) vedha = false; // Should not be vedha
+            }
+            pData.push({name: "10. வேதைப் பொருத்தம் (தோஷ நிவர்த்தி)", res: vedha ? "உண்டு (வேதை இல்லை)" : "இல்லை (வேதை தோஷம்)", cls: vedha ? "match-yes" : "match-no"});
+            if(vedha) total++;
+
+            // Render Table
+            let tHtml = `<tr><th>பொருத்தத்தின் பெயர்</th><th>உள்ளதா? / இல்லையா?</th></tr>`;
+            pData.forEach(d => { tHtml += `<tr><td style="text-align:left; padding-left:15px;"><b>${d.name}</b></td><td class="${d.cls}">${d.res}</td></tr>`; });
+            
+            let color = total >= 6 ? (total >= 8 ? "green" : "orange") : "red";
+            tHtml += `<tr><td colspan="2" style="font-size:18px; color:${color}; background:#ffffcc; padding:15px;">
+                      <b>முடிவு:</b> மொத்தம் <b>${total} / 10</b> பொருத்தங்கள் உள்ளன.<br>
+                      <span style="font-size:12px; color:#555;">(இது பொதுவான நட்சத்திரப் பொருத்தம் மட்டுமே. கீழே உள்ள குறிகாட்டிகள் மற்றும் தசா-புக்தி அடிப்படையில் பாஸ்கரா ஜோதிடர் தீர்க்கமாக முடிவு செய்க)</span>
+                      </td></tr>`;
+            
+            document.getElementById('porutham_table').innerHTML = tHtml;
+        }
+    </script>
+</body>
+</html>
